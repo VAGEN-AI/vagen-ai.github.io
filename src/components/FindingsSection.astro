@@ -1,0 +1,192 @@
+---
+// FindingsSection.astro - Displays the findings section with collapsible cards
+---
+<section id="findings" class="content-section">
+  <div class="section-container">
+    <h2 class="section-title">Summary of Findings</h2>
+    
+    <div class="findings-components">
+      <div class="finding-card" id="finding-card-1">
+        <div class="finding-header">
+          <h3 class="finding-title">Finding 1: Explicit Visual State Reasoning is Crucial for Multi-Turn VLM Agents</h3>
+          <div class="expand-icon">-</div>
+        </div>
+        <div class="finding-content" id="finding-content-1">
+          <p>Vanilla VLMs struggle with multi-turn agentic tasks requiring visual state understanding. Integrating explicit visual state reasoning steps—specifically <strong>Grounding</strong> and <strong>World Modeling</strong>—into the VLM's thinking process during RL training significantly enhances task performance. The combined Grounding-WorldModeling strategy, in particular, demonstrates strong and stable performance, enabling a trained open-source VLM to outperform its un-trained counterpart and even surpass benchmarked proprietary models.</p>
+        </div>
+      </div>
+      
+      <div class="finding-card" id="finding-card-2">
+        <div class="finding-header">
+          <h3 class="finding-title">Finding 2: Optimal Visual State Representation is Task-Dependent</h3>
+          <div class="expand-icon">-</div>
+        </div>
+        <div class="finding-content" id="finding-content-2">
+          <p>The choice of representation for visual states during explicit reasoning significantly impacts performance:</p>
+          <ul>
+            <li><strong>Natural Language:</strong> Performs consistently well, especially when structured information must be inferred from raw visual input.</li>
+            <li><strong>Structured Formats:</strong> Excel in manipulation-heavy tasks (e.g., PrimitiveSkill) where object-centric state abstractions are readily available.</li>
+            <li><strong>Symbolic Representations:</strong> Proved less effective due to the model's limited prior interpretability from visual input.</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="finding-card" id="finding-card-3">
+        <div class="finding-header">
+          <h3 class="finding-title">Finding 3: Visual Reasoning RL with Targeted Rewards and Bi-Level GAE Enhances Reasoning Quality and Task Success</h3>
+          <div class="expand-icon">-</div>
+        </div>
+        <div class="finding-content" id="finding-content-3">
+          <p>To specifically improve visual state reasoning, Visual Reasoning RL incorporates:</p>
+          <ul>
+            <li><strong>Turn-level Visual Reasoning Reward:</strong> An LLM-as-a-Judge assesses the accuracy of the VLM's explicit state descriptions and predictions, effectively supervising reasoning.</li>
+            <li><strong>Bi-Level General Advantage Estimation (GAE):</strong> Estimates advantages at both turn and token levels, providing finer-grained reward signals and improving credit assignment.</li>
+          </ul>
+          <p>This approach consistently outperforms Base RL, leading to improved reasoning quality, higher task success rates, and better generalization.</p>
+        </div>
+      </div>
+      
+      <div class="finding-card" id="finding-card-4">
+        <div class="finding-header">
+          <h3 class="finding-title">Finding 4: Emergent Reasoning Patterns and Challenges</h3>
+          <div class="expand-icon">-</div>
+        </div>
+        <div class="finding-content" id="finding-content-4">
+          <p>Beyond quantitative measurements, we qualitatively analyzed how agents learn to reason:</p>
+          <ul>
+            <li><strong>Reasoning Stability Varies by Task:</strong> While reasoning in tasks like Navigation and PrimitiveSkill (and often Sokoban) appears relatively normal and beneficial with explicit rewards, tasks like FrozenLake show more erratic reasoning patterns, potentially correlating with its lower performance and the difficulty of its visual state reasoning.</li>
+            <li><strong>Potential for Reward Hacking:</strong> Instances of "reward hacking" were observed, particularly with certain reward configurations. Agents might learn to generate reasoning-like text that satisfies the reward mechanism without genuinely reflecting deep understanding or accurate future prediction.</li>
+            <li><strong>Bi-Level GAE as a Double-Edged Sword:</strong> While Bi-Level GAE can improve credit assignment, its interaction with visual reasoning rewards might sometimes allow for more "divergent" or less grounded thinking if the reasoning reward itself can be easily hacked.</li>
+            <li><strong>Convergence to Standardized Phrasing:</strong> Agents across different environments tend to converge towards using a more uniform, templated sentence structure for their reasoning and actions over prolonged training, primarily varying only the directional or specific action tokens.</li>
+            <li><strong>Rule-Based Filtering as a Potential Mitigation:</strong> For simpler forms of reward hacking where reasoning outputs fail basic semantic checks, simple rule-based filtering before reward assignment could be a pragmatic interim solution.</li>
+          </ul>
+          <p>These observations underscore that while explicit reasoning and rewards are beneficial, the design of these rewards must be robust against exploitation, and continuous monitoring of reasoning quality is essential.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .findings-components {
+    margin-bottom: 3rem;
+  }
+
+  .finding-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.1);
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .finding-card:hover {
+    box-shadow: 0 8px 30px rgba(34, 197, 94, 0.15);
+    transform: translateY(-5px);
+  }
+
+  .finding-header {
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+  }
+
+  /* Different background colors for each finding card */
+  .finding-card:nth-child(1) .finding-header { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+  .finding-card:nth-child(2) .finding-header { background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); }
+  .finding-card:nth-child(3) .finding-header { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); }
+  .finding-card:nth-child(4) .finding-header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+
+  .finding-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    flex: 1;
+  }
+
+  .expand-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+    margin-left: 1rem;
+  }
+
+  .finding-content {
+    padding: 1.5rem;
+    display: none;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .finding-content p {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .finding-content.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Add highlighting for key terms */
+  .finding-content strong {
+    color: var(--accent-color);
+    background-color: rgba(34, 197, 94, 0.15);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+  }
+
+  .finding-content ul {
+    color: var(--text-secondary);
+  }
+
+  .finding-content li {
+    margin-bottom: 0.5rem;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Set up event listeners for all finding cards
+    for (let i = 1; i <= 4; i++) {
+      const findingCard = document.getElementById(`finding-card-${i}`);
+      const findingContent = document.getElementById(`finding-content-${i}`);
+      
+      if (findingCard && findingContent) {
+        const expandIcon = findingCard.querySelector('.expand-icon') as HTMLElement | null;
+        
+        // Initialize all cards as expanded
+        findingContent.classList.add('active');
+        if (expandIcon) {
+          expandIcon.textContent = '-';
+        }
+        
+        findingCard.addEventListener('click', (e: Event) => {
+          const target = e.target as HTMLElement;
+          if (target.closest && target.closest('.finding-content')) return;
+          
+          findingContent.classList.toggle('active');
+          if (expandIcon) {
+            if (findingContent.classList.contains('active')) {
+              expandIcon.textContent = '-';
+            } else {
+              expandIcon.textContent = '+';
+            }
+          }
+        });
+      }
+    }
+  });
+</script> 

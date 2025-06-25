@@ -1,0 +1,1151 @@
+---
+// Algorithm.astro - Displays information about the VAGEN framework
+import { Fragment } from 'astro/jsx-runtime'
+
+// Predefined math formula variables
+const mathFormulas = {
+  pomdp: "\\((S, O, \\phi, A, p, r, \\gamma)\\)",
+  observation: "\\(o_t = \\phi(s_t)\\)",
+  objective: "\\[\\max_\\theta \\, E_{\\pi_\\theta, p} \\left[ \\sum_{t=1}^{T} \\gamma^{t-1} r_t \\right]\\]",
+  action: "\\(a_t = \\langle z_t, \\bar{a}_t \\rangle\\)",
+  grounding: "\\(o_t \\rightarrow s_t\\)",
+  worldModeling: "\\(o_t, a_t \\rightarrow s_{t+1}\\)",
+  combined: "\\(o_t \\rightarrow s_t, \\ \\ s_t, a_t \\rightarrow s_{t+1}\\)",
+  gae: "\\[A_i^{GAE} = \\delta_i + \\gamma \\lambda A_{i+1}^{GAE}\\]",
+  ppo: "\\[J^{PPO}(\\theta) = \\frac{1}{\\sum_i M_i^{loss}} \\sum_i M_i^{loss} \\cdot \\min \\left( r_i(\\theta) A_i^{GAE}, clip(r_i(\\theta), 1 - \\varepsilon, 1 + \\varepsilon) A_i^{GAE} \\right)\\]",
+  critic: "\\[J^{\\text{Critic}}(\\phi) = \\frac{1}{\\sum_i M_i^{\\text{loss}}} \\sum_i M_i^{\\text{loss}} \\cdot \\left( V_\\phi(s_i) - \\hat{R}_i \\right)^2\\]"
+}
+---
+
+<section id="vagen" class="content-section alt-background"> 
+  <div class="section-container">
+    <h2 class="section-title">Method</h2>
+    
+    <!-- MathJax CDN -->
+    <script is:inline>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['\\(', '\\)']],
+          displayMath: [['\\[', '\\]']],
+          processEscapes: true,
+          processEnvironments: true,
+          packages: ['base', 'ams', 'noerrors', 'noundefined']
+        },
+        svg: {
+          fontCache: 'global'
+        },
+        startup: {
+          pageReady: () => {
+            return MathJax.startup.defaultPageReady().then(() => {
+              if (window.MathJax) {
+                window.MathJax.typesetPromise();
+              }
+            });
+          }
+        }
+      };
+    </script>
+    <script is:inline src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script is:inline id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" onload="if(window.MathJax) window.MathJax.typesetPromise()"></script>
+    
+   
+    <!-- VAGEN Framework Visualization -->
+    <div class="algorithm-visualization">
+      <div class="visual-container">
+        <div class="flow-step" id="step-observation">
+          <div class="step-icon">🖼️</div>
+          <div class="step-content">
+            <h4>Observation</h4>
+          </div>
+        </div>
+        <div class="flow-arrow-wrapper">
+          <div class="flow-arrow-css">
+            <div class="arrow-line"></div>
+            <div class="arrow-head"></div>
+          </div>
+        </div>
+        <div class="flow-step" id="step-reasoning">
+          <div class="step-icon">🧠</div>
+          <div class="step-content">
+            <h4>Visual Reasoning</h4>
+          </div>
+        </div>
+        <div class="flow-arrow-wrapper">
+          <div class="flow-arrow-css">
+            <div class="arrow-line"></div>
+            <div class="arrow-head"></div>
+          </div>
+        </div>
+        <div class="flow-step" id="step-action">
+          <div class="step-icon">⚡</div>
+          <div class="step-content">
+            <h4>Action</h4>
+          </div>
+        </div>
+        <div class="flow-arrow-wrapper">
+          <div class="flow-arrow-css">
+            <div class="arrow-line"></div>
+            <div class="arrow-head"></div>
+          </div>
+        </div>
+        <div class="flow-step" id="step-reward">
+          <div class="step-icon">🏆</div>
+          <div class="step-content">
+            <h4>Reward</h4>
+          </div>
+        </div>
+        
+        <!-- Repeat arrow -->
+        <div class="repeat-arrow-container">
+          <div class="repeat-arrow-css">
+            <div class="repeat-line"></div>
+            <div class="repeat-arrow-head"></div>
+            <div class="repeat-text">Multi-turn</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="diagram-placeholder">
+    </div>
+    
+    <div class="spacer" style="height: 2rem;"></div>
+
+    <div class="algorithm-components">
+      
+      <div class="component-card pomdp-card" id="pomdp-card">
+        <div class="component-header">
+          <h3 class="component-title">Problem Formulation: VLM Agent Training under POMDP</h3>
+          <div class="expand-icon">-</div>
+        </div>
+        <div class="component-content" id="pomdp-content">
+          <p>We frame multi-turn VLM agentic tasks as a Partially Observable Markov Decision Process (POMDP), represented by the tuple <span set:html={mathFormulas.pomdp} />, where <span set:html="\\(S\\)" /> denotes the set of environment states, and <span set:html="\\(O\\)" /> is the space of observations perceived by the agent.</p>
+          
+          <div class="interactive-pomdp-viz">
+            <div class="pomdp-state" id="state-env">
+              <span class="state-label">Environment State <span set:html="\\(s_t \\in S\\)" /></span>
+              <div class="state-tokens">full environment state</div>
+            </div>
+            <div class="pomdp-arrow">
+              <div class="pomdp-arrow-css">
+                <div class="arrow-line"></div>
+                <div class="arrow-head"></div>
+              </div>
+              <span class="action-label">Observation <span set:html="\\(o_t = \\phi(s_t)\\)" /></span>
+            </div>
+            <div class="pomdp-state" id="state-agent">
+              <span class="state-label">Agent Observation <span set:html="\\(o_t \\in O\\)" /></span>
+              <div class="state-tokens">visual image + prompt</div>
+            </div>
+          </div>
+          
+          <p>Each observation <span set:html="\\(o_t \\in O\\)" /> is a partial view of the environment state <span set:html="\\(s_t \\in S\\)" />, given by the observation function <span set:html="\\(\\phi\\)" />. The agent's objective is to learn a policy <span set:html="\\(\\pi_\\theta\\)" /> that maximizes the expected cumulative discounted return <span set:html={mathFormulas.objective} />.</p>
+          
+          <p>In our setting, the policy <span set:html="\\(\\pi_\\theta\\)" /> is <strong>parameterized by a VLM</strong> that takes in <strong>visual images with their prompts as observations</strong>, and outputs <strong>language token sequences as actions</strong>.</p>
+
+        </div>
+      </div>
+      
+      <div class="component-card training-card" id="training-card">
+        <div class="component-header">
+          <h3 class="component-title">Multi-Turn Reinforcement Learning with Visual State Reasoning</h3>
+          <div class="expand-icon">-</div>
+        </div>
+        <div class="component-content" id="training-content">
+          <p>Our training algorithm optimizes multi-turn interactions to better address the demands of agentic tasks, with specifications to VLMs in multi-turn, trajectory-based optimization setting.</p>
+          
+          <div class="training-phases">
+            <div class="phase-card" id="rollout-phase">
+              <h4>Trajectory Rollout with Visual State Reasoning</h4>
+              <div class="phase-content">
+                <p>Each trajectory begins with an initial observation <span set:html="\\(o_0\\)" /> provided by the environment. The agent generates a structured output <span set:html="\\(a_t = \\langle z_t, \\bar{a}_t \\rangle\\)" />, where <span set:html="\\(z_t\\)" /> represents reasoning tokens and <span set:html="\\(\\bar{a}_t\\)" /> represents executable actions.</p>
+                
+                <div class="reasoning-strategies">
+                  <h4 class="strategies-title">Visual State Reasoning Strategies:</h4>
+                  <div class="strategy-tabs">
+                    <div class="strategy-tab active" data-strategy="nothink" id="nothink-tab">NoThink</div>
+                    <div class="strategy-tab" data-strategy="freethink" id="freethink-tab">FreeThink</div>
+                    <div class="strategy-tab" data-strategy="grounding" id="grounding-tab">Grounding</div>
+                    <div class="strategy-tab" data-strategy="worldmodeling" id="worldmodeling-tab">WorldModeling</div>
+                    <div class="strategy-tab" data-strategy="combined" id="combined-tab">Grounding+WM</div>
+                  </div>
+                  <div class="strategy-content">
+                    <div class="strategy-details active" id="nothink-content">
+                      <p><strong>NoThink:</strong> Direct action generation without explicit reasoning</p>
+                      <div class="code-snippet">
+                        <code>&lt;answer&gt;...&lt;/answer&gt;</code>
+                      </div>
+                    </div>
+                    <div class="strategy-details" id="freethink-content">
+                      <p><strong>FreeThink:</strong> Emergent reasoning without specific structure</p>
+                      <div class="code-snippet">
+                        <code>&lt;think&gt;...&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
+                      </div>
+                    </div>
+                    <div class="strategy-details" id="grounding-content">
+                      <p><strong>Grounding:</strong> Explicit current state description</p>
+                      <div class="code-snippet">
+                        <code>&lt;think&gt;&lt;observation&gt;...&lt;/observation&gt;...&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
+                      </div>
+                      <p>Learning: <span set:html={mathFormulas.grounding} /></p>
+                    </div>
+                    <div class="strategy-details" id="worldmodeling-content">
+                      <p><strong>WorldModeling:</strong> Explicit future state prediction</p>
+                      <div class="code-snippet">
+                        <code>&lt;think&gt;...&lt;prediction&gt;...&lt;/prediction&gt;&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
+                      </div>
+                      <p>Learning: <span set:html={mathFormulas.worldModeling} /></p>
+                    </div>
+                    <div class="strategy-details" id="combined-content">
+                      <p><strong>Grounding+WorldModeling:</strong> Combined current and future state reasoning</p>
+                      <div class="code-snippet">
+                        <code>&lt;think&gt;&lt;observation&gt;...&lt;/observation&gt;&lt;reasoning&gt;...&lt;/reasoning&gt;&lt;prediction&gt;...&lt;/prediction&gt;&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
+                      </div>
+                      <p>Learning: <span set:html={mathFormulas.combined} /></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="phase-card" id="advantage-phase">
+              <h4>Advantage Estimation with Masked GAE</h4>
+              <div class="phase-content">
+                <p>
+                  We use a modified form of Generalized Advantage Estimation (GAE) that applies masking to exclude tokens generated by the environment (i.e., non-action tokens) from advantage estimation and loss computation. This ensures that only relevant tokens contribute to the learning signal.
+                </p>
+                <div class="show-code-toggle" onclick="const codeBlock = this.nextElementSibling; codeBlock.style.display = codeBlock.style.display === 'block' ? 'none' : 'block'; this.querySelector('.toggle-icon').textContent = codeBlock.style.display === 'block' ? '-' : '+';" style="cursor:pointer; user-select:none; display: flex; align-items: center; gap: 0.5em; font-weight: 600; color: var(--accent-color); margin: 1em 0 0.5em 0;">
+                  <span class="toggle-icon" style="font-size: 1.2em;">+</span> Show Code
+                </div>
+                <pre class="code-block" style="display:none; background: #f8fafc; color: #222; border-radius: 8px; padding: 1em; margin: 0; overflow-x: auto; font-size: 0.98em;"><code>def compute_gae_advantage_return_with_loss_mask(token_level_rewards: torch.Tensor, values: torch.Tensor, 
+                                 loss_mask: torch.Tensor, gamma: float, lam: float):
+    """Modified GAE calculation that handle multi-turn with loss mask
+    Here we should also ensure that the trajectory score is given at the last valid token instead of last token
+    Seems it's true in reward manager
+    Args:
+        token_level_rewards: `(torch.Tensor)`
+            shape: (bs, response_length)
+        values: `(torch.Tensor)`
+            shape: (bs, response_length)
+        loss_mask: `(torch.Tensor)`
+            shape: (bs, response_length). 1 for llm_raw_response, 0 for environment info and paddings
+        gamma: `(float)`
+            discounted factor used in RL
+        lam: `(float)`
+            lambda value when computing Generalized Advantage Estimation
+
+    Returns:
+        advantages: `(torch.Tensor)`
+            shape: (bs, response_length)
+        Returns: `(torch.Tensor)`
+            shape: (bs, response_length)
+    """
+    with torch.no_grad():
+        batch_size, gen_len = token_level_rewards.shape
+        advantages = torch.zeros_like(token_level_rewards)
+        returns = torch.zeros_like(token_level_rewards)
+        
+        for b in range(batch_size):
+            lastgaelam = 0.0
+            
+            # Find the valid token positions (where loss_mask is 1)
+            valid_positions = loss_mask[b].nonzero(as_tuple=True)[0]
+            
+            if len(valid_positions) == 0:
+                continue
+                
+            for i in range(len(valid_positions) - 1, -1, -1):
+                curr_pos = valid_positions[i]
+                
+                # Get the next value
+                if i < len(valid_positions) - 1:
+                    # Next valid position
+                    next_pos = valid_positions[i + 1]
+                    nextvalue = values[b, next_pos]
+                    
+                else:
+                    # Last valid position
+                    nextvalue = 0.0
+                
+                # Calculate delta using the next valid token
+                delta = token_level_rewards[b, curr_pos] + gamma * nextvalue - values[b, curr_pos]
+                
+                # Update advantage estimate
+                lastgaelam = delta + gamma * lam * lastgaelam
+                advantages[b, curr_pos] = lastgaelam
+            
+            # Calculate returns for valid positions
+            for i, pos in enumerate(valid_positions):
+                returns[b, pos] = advantages[b, pos] + values[b, pos]
+        
+
+        advantages = verl_F.masked_whiten(advantages, loss_mask)
+        
+    return advantages, returns
+</code></pre>
+              </div>
+            </div>
+            
+            <div class="phase-card" id="policy-phase">
+              <h4>Policy Update with PPO</h4>
+              <div class="phase-content">
+                <p>We update the actor and critic using the following formulas:</p>
+                
+                <div class="formula">
+                  <span set:html={mathFormulas.ppo} />
+                </div>
+                
+                <div class="formula" style="margin-top: 1em;">
+                  <span set:html={mathFormulas.critic} />
+                </div>
+                
+                <p>where <span set:html="\\(M_i^{loss}\\)" /> masks non-action tokens. The trajectory collection, advantage estimation, and policy update iterate until convergence.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Improvement 1: Visual Reasoning Reward -->
+      <div class="component-card" id="improvement1-card">
+        <div class="component-header">
+          <h3 class="component-title">Boost #1: Visual Reasoning Reward</h3>
+          <div class="expand-icon">-</div>
+        </div>
+        <div class="component-content" id="improvement1-content">
+          <p>We use LLM-as-Judge to reward the agent when its predicted or observed visual state matches the ground truth.</p>
+          <div class="visual-reward-carousel" style="text-align:center; margin: 1.5em 0;">
+            <img id="boost1-carousel-img" src="/figures/1.png" alt="Visual Reasoning Reward Example" style="max-width: 800px; width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); margin-bottom: 0.5em; transition: opacity 0.3s;" />
+            <input type="range" id="boost1-progress" min="0" max="5" value="0" style="width: 60%; margin-top: 0.5em; accent-color: var(--accent-color);" />
+          </div>
+          <script is:inline>
+            let boost1Imgs = ["/figures/1.png","/figures/2.png","/figures/3.png","/figures/4.png","/figures/5.png","/figures/6.png"];
+            let boost1Idx = 0;
+            let boost1Interval = null;
+            const imgEl = document.getElementById('boost1-carousel-img');
+            const progress = document.getElementById('boost1-progress');
+            function updateBoost1Img(idx) {
+              if (imgEl) imgEl.src = boost1Imgs[idx];
+              if (progress) progress.value = idx;
+            }
+            function startAutoPlay() {
+              if (boost1Interval) clearInterval(boost1Interval);
+              boost1Interval = setInterval(() => {
+                boost1Idx = (boost1Idx + 1) % boost1Imgs.length;
+                updateBoost1Img(boost1Idx);
+              }, 1800);
+            }
+            function stopAutoPlay() {
+              if (boost1Interval) clearInterval(boost1Interval);
+            }
+            if (imgEl) {
+              imgEl.addEventListener('mouseenter', stopAutoPlay);
+              imgEl.addEventListener('mouseleave', startAutoPlay);
+            }
+            if (progress) {
+              progress.addEventListener('input', (e) => {
+                boost1Idx = parseInt(e.target.value);
+                updateBoost1Img(boost1Idx);
+              });
+            }
+            updateBoost1Img(boost1Idx);
+            startAutoPlay();
+          </script>
+        </div>
+      </div>
+
+      <!-- Improvement 2: Bi-Level GAE -->
+      <div class="component-card" id="improvement2-card">
+        <div class="component-header">
+          <h3 class="component-title">Boost #2: Bi-Level GAE</h3>
+          <div class="expand-icon">-</div>
+        </div>
+        <div class="component-content" id="improvement2-content">
+          <p>To address the limitation of only providing trajectory-level feedback, we propose Bi-Level GAE, which delivers fine-grained turn-level reward signals. This approach assigns rewards at the end of each action and introduces two discount factors: one for tokens within a turn, and one for transitions across turns.</p>
+          <div class="diagram-placeholder">
+            <img src="/figures/vrRL-1.png" alt="Bi-Level GAE Diagram" style="max-width: 800px; width: 100%; margin: 1em auto; display: block; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+            <p style="color: #888; text-align: center; margin-top: 0.5em;">Bi-Level GAE framework illustration.</p>
+          </div>
+          <div class="show-code-toggle" onclick="const codeBlock = this.nextElementSibling; codeBlock.style.display = codeBlock.style.display === 'block' ? 'none' : 'block'; this.querySelector('.toggle-icon').textContent = codeBlock.style.display === 'block' ? '-' : '+';" style="cursor:pointer; user-select:none; display: flex; align-items: center; gap: 0.5em; font-weight: 600; color: var(--accent-color); margin: 1em 0 0.5em 0;">
+            <span class="toggle-icon" style="font-size: 1.2em;">+</span> Show Code
+          </div>
+          <pre class="code-block" style="display:none; background: #f8fafc; color: #222; border-radius: 8px; padding: 1em; margin: 0; overflow-x: auto; font-size: 0.98em;"><code>def compute_bi_level_gae_advantage_return(
+        token_level_rewards: torch.Tensor,
+        reward_mask: torch.Tensor,
+        values: torch.Tensor, 
+        loss_mask: torch.Tensor,
+        gamma: float,
+        lam: float,
+        high_level_gamma: float
+    ):
+    """Modified GAE calculation that compute two level of advantage and return:
+    high level: per-turn wise
+    low level: token wise
+    there're two level of MDP, where high level is the agentic MDP and low level is the token MDP
+    Args:
+        token_level_rewards: `(torch.Tensor)` (multi-turn reward, per turn reward is given at eos token for each response token sequence)
+            shape: (bs, response_length)
+        reward_mask: `(torch.Tensor)`
+            shape: (bs, response_length). 1 for reward position (end of each llm response)
+        values: `(torch.Tensor)`
+            shape: (bs, response_length)
+        loss_mask: `(torch.Tensor)`
+            shape: (bs, response_length). 1 for llm_raw_response, 0 for environment info and paddings
+        gamma: `(float)`
+            discounted factor used in RL for token rewards
+        high_level_gamma: `(float)`
+            discounted factor used in RL for per-turn reward
+        lam: `(float)`
+            lambda value when computing Generalized Advantage Estimation
+
+    Returns:
+        advantages: `(torch.Tensor)`
+            shape: (bs, response_length)
+        Returns: `(torch.Tensor)`
+            shape: (bs, response_length)
+    """
+    with torch.no_grad():
+        batch_size, gen_len = token_level_rewards.shape
+        advantages = torch.zeros_like(token_level_rewards)
+        returns = torch.zeros_like(token_level_rewards)
+        updated_reward = token_level_rewards.clone()
+        
+        for b in range(batch_size):
+            # First, calculate high level advantage and return for eos token of each turn using high level gamma
+            eos_positions=reward_mask[b].nonzero(as_tuple=True)[0]
+            lastgaelam = 0.0
+            for i in range(len(eos_positions) - 1, -1, -1):
+                curr_pos = eos_positions[i]
+                
+                # Get the next value
+                if i < len(eos_positions) - 1:
+                    # Next valid position
+                    next_pos = eos_positions[i + 1]
+                    nextvalue = values[b, next_pos]
+                    
+                else:
+                    # Last valid position
+                    nextvalue = 0.0
+                
+                # Calculate delta using the next valid token
+                delta = updated_reward[b, curr_pos] + high_level_gamma * nextvalue - values[b, curr_pos]
+                
+                # Update advantage estimate
+                lastgaelam = delta + high_level_gamma * lam * lastgaelam
+                advantages[b, curr_pos] = lastgaelam
+            
+            for i, pos in enumerate(eos_positions):
+                returns[b, pos] = advantages[b, pos] + values[b, pos]
+                updated_reward[b, pos] = advantages[b, pos] + values[b, pos]
+            
+            # Then, calculate low level advantage and return for each token using gamma, assume the reward for the sequence now is the return at eos token
+            lastgaelam = 0.0
+            valid_positions = loss_mask[b].nonzero(as_tuple=True)[0]
+            for i in range(len(valid_positions) - 1, -1, -1):
+                curr_pos = valid_positions[i]
+                if curr_pos not in eos_positions:
+                    # Next valid position
+                    next_pos = valid_positions[i + 1]
+                    nextvalue = values[b, next_pos]
+                else:
+                    # Last valid position
+                    nextvalue = 0.0
+                    lastgaelam = 0.0
+                delta = updated_reward[b, curr_pos] + gamma * nextvalue - values[b, curr_pos]
+                lastgaelam = delta + gamma * lam * lastgaelam
+                advantages[b, curr_pos] = lastgaelam
+                returns[b, curr_pos] = lastgaelam + values[b, curr_pos]
+        
+        advantages = verl_F.masked_whiten(advantages, loss_mask)
+    
+    return advantages, returns
+</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .content-section {
+    padding: 3rem 0;
+    background-color: transparent;
+  }
+
+  .section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .section-title {
+    text-align: center;
+    color: var(--text-primary);
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .algorithm-visualization {
+    margin: 2rem 0 3rem 0;
+  }
+
+  .visual-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.1);
+    position: relative;
+    backdrop-filter: blur(10px);
+  }
+
+  .flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 1.5rem;
+    width: 140px;
+    height: 140px;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+  }
+
+  .flow-step:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(34, 197, 94, 0.15);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 100%);
+  }
+
+  .flow-step.active {
+    border-color: var(--accent-color);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.1) 100%);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+  }
+
+  .step-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .step-content h4 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .flow-arrow-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 1rem;
+  }
+
+  .flow-arrow-css {
+    position: relative;
+    width: 50px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  .arrow-line {
+    width: 40px;
+    height: 2px;
+    background-color: var(--accent-color);
+  }
+
+  .arrow-head {
+    width: 0;
+    height: 0;
+    border-left: 8px solid var(--accent-color);
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    margin-left: -2px;
+  }
+
+  .repeat-arrow-container {
+    position: absolute;
+    width: calc(100% - 4rem);
+    height: 50px;
+    bottom: -30px;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .repeat-arrow-css {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .repeat-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transform: translateY(-50%);
+  }
+
+  .repeat-arrow-head {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-left: 8px solid var(--accent-color);
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    transform: translateY(-50%);
+  }
+
+  .repeat-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 0 10px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 700;
+    z-index: 1;
+    backdrop-filter: blur(10px);
+  }
+
+  .pomdp-arrow-css {
+    position: relative;
+    width: 50px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  .diagram-placeholder {
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  .diagram-placeholder img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .component-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.1);
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .component-card:hover {
+    box-shadow: 0 8px 30px rgba(34, 197, 94, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .component-header {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .training-card .component-header {
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  }
+
+  .component-title {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .expand-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+  }
+
+  .component-content {
+    padding: 2rem;
+    display: none;
+    color: var(--text-secondary);
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .component-content.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .interactive-pomdp-viz {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    gap: 1rem;
+  }
+
+  .pomdp-state {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 200px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+  }
+
+  .pomdp-state:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 100%);
+  }
+
+  .state-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+
+  .state-tokens {
+    font-family: 'Courier New', monospace;
+    padding: 0.5rem;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.1) 100%);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .pomdp-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 1rem;
+  }
+
+  .action-label {
+    font-weight: bold;
+    color: var(--accent-color);
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .formula {
+    text-align: center;
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+    border-radius: 8px;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+  }
+
+  .phase-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--accent-color);
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+  }
+
+  .phase-card h4 {
+    color: var(--text-primary);
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }
+
+  .reasoning-strategies {
+    margin: 2rem 0;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+  }
+
+  .strategies-title {
+    margin: 0;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.1) 100%);
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+    color: var(--text-primary);
+    font-size: 1.1rem;
+  }
+
+  .strategy-tabs {
+    display: flex;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+    flex-wrap: wrap;
+  }
+
+  .strategy-tab {
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-right: 1px solid var(--card-border);
+    flex-grow: 1;
+    text-align: center;
+    color: var(--text-secondary);
+  }
+
+  .strategy-tab:last-child {
+    border-right: none;
+  }
+
+  .strategy-tab:hover {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: var(--text-primary);
+  }
+
+  .strategy-tab.active {
+    background-color: var(--accent-color);
+    color: white;
+    font-weight: bold;
+  }
+
+  .strategy-content {
+    padding: 1.5rem;
+    background-color: var(--card-bg);
+    min-height: 200px;
+    color: var(--text-secondary);
+  }
+
+  .strategy-details {
+    display: none;
+  }
+
+  .strategy-details.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .code-snippet {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+    border: 1px solid var(--card-border);
+  }
+
+  .code-snippet code {
+    color: var(--text-primary);
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .section-title {
+      font-size: 1.8rem;
+    }
+    
+    .visual-container {
+      flex-direction: column;
+      padding: 1.5rem;
+      gap: 2rem;
+    }
+    
+    .flow-arrow-wrapper {
+      transform: rotate(90deg);
+      margin: 1rem 0;
+    }
+    
+    .repeat-arrow-container {
+      display: none;
+    }
+    
+    .interactive-pomdp-viz {
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .pomdp-arrow {
+      transform: rotate(90deg);
+      margin: 1rem 0;
+    }
+    
+    .pomdp-state {
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    .strategy-tabs {
+      flex-direction: column;
+    }
+    
+    .strategy-tab {
+      border-right: none;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .strategy-tab:last-child {
+      border-bottom: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Component expansion functionality
+    const pomdpCard = document.getElementById('pomdp-card');
+    const pomdpContent = document.getElementById('pomdp-content');
+    const trainingCard = document.getElementById('training-card');
+    const trainingContent = document.getElementById('training-content');
+
+    if (pomdpCard && pomdpContent) {
+      const pomdpExpandIcon = pomdpCard.querySelector('.expand-icon');
+      
+      pomdpCard.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement | null;
+        if (target && target.closest('.component-content')) return;
+        
+        pomdpContent.classList.toggle('active');
+        if (pomdpExpandIcon) {
+          if (pomdpContent.classList.contains('active')) {
+            pomdpExpandIcon.textContent = '-';
+          } else {
+            pomdpExpandIcon.textContent = '+';
+          }
+        }
+      });
+    }
+
+    if (trainingCard && trainingContent) {
+      const trainingExpandIcon = trainingCard.querySelector('.expand-icon');
+      
+      trainingCard.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement | null;
+        if (target && target.closest('.component-content')) return;
+        
+        trainingContent.classList.toggle('active');
+        if (trainingExpandIcon) {
+          if (trainingContent.classList.contains('active')) {
+            trainingExpandIcon.textContent = '-';
+          } else {
+            trainingExpandIcon.textContent = '+';
+          }
+        }
+      });
+    }
+
+    // Initialize display: keep both cards expanded
+    if (pomdpContent && pomdpCard) {
+      pomdpContent.classList.add('active');
+      const pomdpExpandIcon = pomdpCard.querySelector('.expand-icon');
+      if (pomdpExpandIcon) {
+        pomdpExpandIcon.textContent = '-';
+      }
+    }
+    
+    if (trainingContent && trainingCard) {
+      trainingContent.classList.add('active');
+      const trainingExpandIcon = trainingCard.querySelector('.expand-icon');
+      if (trainingExpandIcon) {
+        trainingExpandIcon.textContent = '-';
+      }
+    }
+
+    // Strategy tab switching
+    const nothinkTab = document.getElementById('nothink-tab');
+    const freethinkTab = document.getElementById('freethink-tab');
+    const groundingTab = document.getElementById('grounding-tab');
+    const worldmodelingTab = document.getElementById('worldmodeling-tab');
+    const combinedTab = document.getElementById('combined-tab');
+    const nothinkContent = document.getElementById('nothink-content');
+    const freethinkContent = document.getElementById('freethink-content');
+    const groundingContent = document.getElementById('grounding-content');
+    const worldmodelingContent = document.getElementById('worldmodeling-content');
+    const combinedContent = document.getElementById('combined-content');
+
+    // Function to re-render MathJax formulas
+    function reRenderMathJax() {
+      if ((window as any).MathJax && (window as any).MathJax.typesetPromise) {
+        (window as any).MathJax.typesetPromise();
+      }
+    }
+
+    if (nothinkTab && freethinkTab && groundingTab && worldmodelingTab && combinedTab && nothinkContent && freethinkContent && groundingContent && worldmodelingContent && combinedContent) {
+      nothinkTab.addEventListener('click', () => {
+        nothinkTab.classList.add('active');
+        freethinkTab.classList.remove('active');
+        groundingTab.classList.remove('active');
+        worldmodelingTab.classList.remove('active');
+        combinedTab.classList.remove('active');
+        nothinkContent.classList.add('active');
+        freethinkContent.classList.remove('active');
+        groundingContent.classList.remove('active');
+        worldmodelingContent.classList.remove('active');
+        combinedContent.classList.remove('active');
+        setTimeout(reRenderMathJax, 100);
+      });
+
+      freethinkTab.addEventListener('click', () => {
+        freethinkTab.classList.add('active');
+        nothinkTab.classList.remove('active');
+        groundingTab.classList.remove('active');
+        worldmodelingTab.classList.remove('active');
+        combinedTab.classList.remove('active');
+        nothinkContent.classList.remove('active');
+        freethinkContent.classList.add('active');
+        groundingContent.classList.remove('active');
+        worldmodelingContent.classList.remove('active');
+        combinedContent.classList.remove('active');
+        setTimeout(reRenderMathJax, 100);
+      });
+
+      groundingTab.addEventListener('click', () => {
+        groundingTab.classList.add('active');
+        nothinkTab.classList.remove('active');
+        freethinkTab.classList.remove('active');
+        worldmodelingTab.classList.remove('active');
+        combinedTab.classList.remove('active');
+        nothinkContent.classList.remove('active');
+        freethinkContent.classList.remove('active');
+        groundingContent.classList.add('active');
+        worldmodelingContent.classList.remove('active');
+        combinedContent.classList.remove('active');
+        setTimeout(reRenderMathJax, 100);
+      });
+
+      worldmodelingTab.addEventListener('click', () => {
+        worldmodelingTab.classList.add('active');
+        nothinkTab.classList.remove('active');
+        freethinkTab.classList.remove('active');
+        groundingTab.classList.remove('active');
+        combinedTab.classList.remove('active');
+        nothinkContent.classList.remove('active');
+        freethinkContent.classList.remove('active');
+        groundingContent.classList.remove('active');
+        worldmodelingContent.classList.add('active');
+        combinedContent.classList.remove('active');
+        setTimeout(reRenderMathJax, 100);
+      });
+
+      combinedTab.addEventListener('click', () => {
+        combinedTab.classList.add('active');
+        nothinkTab.classList.remove('active');
+        freethinkTab.classList.remove('active');
+        groundingTab.classList.remove('active');
+        worldmodelingTab.classList.remove('active');
+        nothinkContent.classList.remove('active');
+        freethinkContent.classList.remove('active');
+        groundingContent.classList.remove('active');
+        worldmodelingContent.classList.remove('active');
+        combinedContent.classList.add('active');
+        setTimeout(reRenderMathJax, 100);
+      });
+    }
+
+    // Interactive algorithm flow
+    const flowSteps = document.querySelectorAll('.flow-step');
+    let currentStepIndex = 0;
+
+    function highlightNextStep() {
+      // Reset all steps
+      flowSteps.forEach(step => step.classList.remove('active'));
+      
+      // Highlight current step
+      if (flowSteps[currentStepIndex]) {
+        flowSteps[currentStepIndex].classList.add('active');
+      }
+      
+      // Move to next step
+      currentStepIndex = (currentStepIndex + 1) % flowSteps.length;
+    }
+
+    // Auto-advance flow steps
+    setInterval(highlightNextStep, 3000);
+
+    // Initial highlight
+    if (flowSteps[0]) {
+      flowSteps[0].classList.add('active');
+    }
+
+    // Re-render MathJax after page loads
+    setTimeout(reRenderMathJax, 1000);
+
+    // Boost #1
+    const improvement1Card = document.getElementById('improvement1-card');
+    const improvement1Content = document.getElementById('improvement1-content');
+    if (improvement1Card && improvement1Content) {
+      const improvement1ExpandIcon = improvement1Card.querySelector('.expand-icon');
+      improvement1Card.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement | null;
+        if (target && target.closest('.component-content')) return;
+        improvement1Content.classList.toggle('active');
+        if (improvement1ExpandIcon) {
+          if (improvement1Content.classList.contains('active')) {
+            improvement1ExpandIcon.textContent = '-';
+          } else {
+            improvement1ExpandIcon.textContent = '+';
+          }
+        }
+      });
+      // 默认展开
+      improvement1Content.classList.add('active');
+      if (improvement1ExpandIcon) improvement1ExpandIcon.textContent = '-';
+    }
+
+    // Boost #2
+    const improvement2Card = document.getElementById('improvement2-card');
+    const improvement2Content = document.getElementById('improvement2-content');
+    if (improvement2Card && improvement2Content) {
+      const improvement2ExpandIcon = improvement2Card.querySelector('.expand-icon');
+      improvement2Card.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement | null;
+        if (target && target.closest('.component-content')) return;
+        improvement2Content.classList.toggle('active');
+        if (improvement2ExpandIcon) {
+          if (improvement2Content.classList.contains('active')) {
+            improvement2ExpandIcon.textContent = '-';
+          } else {
+            improvement2ExpandIcon.textContent = '+';
+          }
+        }
+      });
+      // 默认展开
+      improvement2Content.classList.add('active');
+      if (improvement2ExpandIcon) improvement2ExpandIcon.textContent = '-';
+    }
+  });
+</script>

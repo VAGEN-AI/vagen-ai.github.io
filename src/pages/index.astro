@@ -1,0 +1,107 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Algorithm from '../components/Algorithm.astro';
+// import ChartsSection from '../components/ChartsSection.astro';
+import FindingsSection from '../components/FindingsSection.astro';
+// import TrajectoryViewer from '../components/TrajectoryViewer.astro';
+import AuthorsCitation from '../components/AuthorsCitation.astro';
+import Cases from '../components/Cases.astro';
+
+// Import component-specific styles
+import '../styles/section.css';
+import '../styles/hero.css';
+import '../styles/authors.css';
+import '../styles/resources.css';
+import '../styles/trajectoryViewer.css';
+
+const pageTitle = "VAGEN - VLM Agent Training";
+---
+<Layout title={pageTitle}>
+  <Hero />
+  <Algorithm />
+  <!-- <ChartsSection /> -->
+  <section id="results" class="content-section alt-background">
+    <div class="section-container">
+      <h2 class="section-title">Results</h2>
+      <div class="main-table" style="text-align:center; margin-bottom:2.5rem;">
+        <img src="/figures/form.png" alt="Main Results Table" style="width:100%;max-width:1100px;border-radius:12px;box-shadow:0 4px 16px rgba(34,197,94,0.12);" />
+        <p class="table-caption" style="margin-top:1rem;font-size:1.1rem;">Explicitly visual states reasoning is crucial for VLM agents.</p>
+      </div>
+      <div class="ablation-section" style="margin-top:3rem;text-align:center;">
+        <img src="/figures/ablation_comparision-1.png" alt="Ablation Study" style="width:100%;max-width:900px;border-radius:12px;box-shadow:0 4px 16px rgba(34,197,94,0.12);" />
+        <ul style="margin:2rem auto 0 auto;max-width:800px;text-align:left;font-size:1.08rem;">
+          <li><b>Bi-Level GAE alone</b> brings notable but unstable improvements, being sensitive to reward sparsity and less stable in sparse environments.</li>
+          <li><b>The Visual Reasoning Reward alone</b> consistently boosts performance by providing essential visual learning signals, but is limited by coarse credit assignment.</li>
+          <li><b>VAGEN-Full</b> is the most robust and achieves strong, stable results across all tasks.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <Cases />
+  <FindingsSection />
+  <!-- <TrajectoryViewer /> -->
+  <AuthorsCitation />
+</Layout>
+
+<script>
+  import { initTrajectoryViewer } from '../scripts/trajectoryViewer';
+  import { initCitationCopy } from '../scripts/citation';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initialize citation copy functionality
+    initCitationCopy();
+    
+    // Initialize trajectory viewer
+    initTrajectoryViewer();
+
+    // Text animation for hero section
+    const animateTitle = () => {
+      const titleElement = document.getElementById('animated-title');
+      const subtitleElement = document.getElementById('animated-subtitle');
+      
+      if (titleElement && subtitleElement) {
+        // Split title text into individual characters for animation
+        const titleText = titleElement.innerText;
+        titleElement.innerHTML = '';
+        
+        for (let i = 0; i < titleText.length; i++) {
+          const charSpan = document.createElement('span');
+          charSpan.className = 'reveal-char';
+          charSpan.style.animationDelay = `${i * 0.1}s`;
+          
+          // Special handling for spaces to ensure they display correctly
+          if (titleText[i] === ' ') {
+            charSpan.innerHTML = '&nbsp;';
+          } else {
+            charSpan.innerText = titleText[i];
+          }
+          
+          titleElement.appendChild(charSpan);
+        }
+        
+        // Split subtitle text into individual characters for animation
+        const subtitleText = subtitleElement.innerText;
+        subtitleElement.innerHTML = '';
+        
+        for (let i = 0; i < subtitleText.length; i++) {
+          const charSpan = document.createElement('span');
+          charSpan.className = 'reveal-char-subtitle';
+          charSpan.style.animationDelay = `${i * 0.05 + 0.5}s`; // Start after title animation
+          
+          // Special handling for spaces to ensure they display correctly
+          if (subtitleText[i] === ' ') {
+            charSpan.innerHTML = '&nbsp;';
+          } else {
+            charSpan.innerText = subtitleText[i];
+          }
+          
+          subtitleElement.appendChild(charSpan);
+        }
+      }
+    };
+    
+    // Run animation
+    animateTitle();
+  });
+</script>
