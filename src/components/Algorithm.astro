@@ -315,11 +315,11 @@ const mathFormulas = {
         <div class="component-content" id="improvement1-content">
           <p>We use LLM-as-Judge to reward the agent when its predicted or observed visual state matches the ground truth.</p>
           <div class="visual-reward-carousel" style="text-align:center; margin: 1.5em 0;">
-            <img id="boost1-carousel-img" src="/figures/1.png" alt="Visual Reasoning Reward Example" style="max-width: 800px; width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); margin-bottom: 0.5em; transition: opacity 0.3s;" />
+            <img id="boost1-carousel-img" src="figures/1.png" alt="Visual Reasoning Reward Example" style="max-width: 800px; width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); margin-bottom: 0.5em; transition: opacity 0.3s;" />
             <input type="range" id="boost1-progress" min="0" max="5" value="0" style="width: 60%; margin-top: 0.5em; accent-color: var(--accent-color);" />
           </div>
           <script is:inline>
-            let boost1Imgs = ["/figures/1.png","/figures/2.png","/figures/3.png","/figures/4.png","/figures/5.png","/figures/6.png"];
+            let boost1Imgs = ["figures/1.png","figures/2.png","figures/3.png","figures/4.png","figures/5.png","figures/6.png"];
             let boost1Idx = 0;
             let boost1Interval = null;
             const imgEl = document.getElementById('boost1-carousel-img');
@@ -363,7 +363,7 @@ const mathFormulas = {
         <div class="component-content" id="improvement2-content">
           <p>To address the limitation of only providing trajectory-level feedback, we propose Bi-Level GAE, which delivers fine-grained turn-level reward signals. This approach assigns rewards at the end of each action and introduces two discount factors: one for tokens within a turn, and one for transitions across turns.</p>
           <div class="diagram-placeholder">
-            <img src="/figures/vrRL-1.png" alt="Bi-Level GAE Diagram" style="max-width: 800px; width: 100%; margin: 1em auto; display: block; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+            <img src="figures/vrRL-1.png" alt="Bi-Level GAE Diagram" style="max-width: 800px; width: 100%; margin: 1em auto; display: block; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
             <p style="color: #888; text-align: center; margin-top: 0.5em;">Bi-Level GAE framework illustration.</p>
           </div>
           <div class="show-code-toggle" onclick="const codeBlock = this.nextElementSibling; codeBlock.style.display = codeBlock.style.display === 'block' ? 'none' : 'block'; this.querySelector('.toggle-icon').textContent = codeBlock.style.display === 'block' ? '-' : '+';" style="cursor:pointer; user-select:none; display: flex; align-items: center; gap: 0.5em; font-weight: 600; color: var(--accent-color); margin: 1em 0 0.5em 0;">
