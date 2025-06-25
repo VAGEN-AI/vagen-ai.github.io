@@ -11,7 +11,7 @@
           <div class="expand-icon">+</div>
         </div>
         <div class="component-content" id="case-frozenlake-content">
-          <img src="figures/frozenlake_comparizon.png" alt="FrozenLake Comparison" style="width:100vw;max-width:950px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);margin:1.5rem auto;display:block;" />
+          <img src="figures/frozenlake_comparizon.png" alt="FrozenLake Comparison" style="width:100%;max-width:950px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);margin:1.5rem auto;display:block;" />
         </div>
       </div>
       <div class="component-card" id="case-navigation">
@@ -20,7 +20,7 @@
           <div class="expand-icon">+</div>
         </div>
         <div class="component-content" id="case-navigation-content">
-          <img src="figures/navigation_comparison.png" alt="Navigation Comparison" style="width:100vw;max-width:950px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);margin:1.5rem auto;display:block;" />
+          <img src="figures/navigation_comparison.png" alt="Navigation Comparison" style="width:100%;max-width:950px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);margin:1.5rem auto;display:block;" />
         </div>
       </div>
     </div>
@@ -151,5 +151,32 @@
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* 手机端自适应 */
+  @media (max-width: 768px) {
+    .case-cards > div:last-child > div:first-child {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .case-cards > div:last-child > div:first-child {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .case-cards > div:last-child > div:last-child {
+      display: none;
+    }
+    .case-cards > div:last-child::after {
+      content: "* For SVG: Left is the model's generated SVG, Right is the target SVG.";
+      display: block;
+      max-width: 900px;
+      margin: 1.5rem auto 0 auto;
+      font-size: 0.98rem;
+      color: #666;
+      text-align: center;
+    }
   }
 </style> 
