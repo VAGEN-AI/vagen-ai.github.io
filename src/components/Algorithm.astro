@@ -669,199 +669,74 @@ const mathFormulas = {
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Component expansion functionality
-    const pomdpCard = document.getElementById('pomdp-card');
-    const pomdpContent = document.getElementById('pomdp-content');
-    const trainingCard = document.getElementById('training-card');
-    const trainingContent = document.getElementById('training-content');
-
-    if (pomdpCard && pomdpContent) {
-      const pomdpExpandIcon = pomdpCard.querySelector('.expand-icon');
-      
-      pomdpCard.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement | null;
-        if (target && target.closest('.component-content')) return;
-        
+document.addEventListener('DOMContentLoaded', () => {
+  // POMDP卡片
+  const pomdpCard = document.getElementById('pomdp-card');
+  const pomdpContent = document.getElementById('pomdp-content');
+  if (pomdpCard && pomdpContent) {
+    const pomdpExpandIcon = pomdpCard.querySelector('.expand-icon');
+    pomdpContent.classList.remove('active');
+    if (pomdpExpandIcon) pomdpExpandIcon.textContent = '+';
+    const header = pomdpCard.querySelector('.component-header');
+    if (header) {
+      header.addEventListener('click', (e) => {
         pomdpContent.classList.toggle('active');
         if (pomdpExpandIcon) {
-          if (pomdpContent.classList.contains('active')) {
-            pomdpExpandIcon.textContent = '-';
-          } else {
-            pomdpExpandIcon.textContent = '+';
-          }
+          pomdpExpandIcon.textContent = pomdpContent.classList.contains('active') ? '-' : '+';
         }
       });
     }
-
-    if (trainingCard && trainingContent) {
-      const trainingExpandIcon = trainingCard.querySelector('.expand-icon');
-      
-      trainingCard.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement | null;
-        if (target && target.closest('.component-content')) return;
-        
+  }
+  // Training卡片
+  const trainingCard = document.getElementById('training-card');
+  const trainingContent = document.getElementById('training-content');
+  if (trainingCard && trainingContent) {
+    const trainingExpandIcon = trainingCard.querySelector('.expand-icon');
+    trainingContent.classList.remove('active');
+    if (trainingExpandIcon) trainingExpandIcon.textContent = '+';
+    const header = trainingCard.querySelector('.component-header');
+    if (header) {
+      header.addEventListener('click', (e) => {
         trainingContent.classList.toggle('active');
         if (trainingExpandIcon) {
-          if (trainingContent.classList.contains('active')) {
-            trainingExpandIcon.textContent = '-';
-          } else {
-            trainingExpandIcon.textContent = '+';
-          }
+          trainingExpandIcon.textContent = trainingContent.classList.contains('active') ? '-' : '+';
         }
       });
     }
-
-    // Initialize display: keep both cards expanded
-    if (pomdpContent && pomdpCard) {
-      pomdpContent.classList.add('active');
-      const pomdpExpandIcon = pomdpCard.querySelector('.expand-icon');
-      if (pomdpExpandIcon) {
-        pomdpExpandIcon.textContent = '-';
-      }
-    }
-    
-    if (trainingContent && trainingCard) {
-      trainingContent.classList.add('active');
-      const trainingExpandIcon = trainingCard.querySelector('.expand-icon');
-      if (trainingExpandIcon) {
-        trainingExpandIcon.textContent = '-';
-      }
-    }
-
-    // Strategy tab switching
-    const nothinkTab = document.getElementById('nothink-tab');
-    const freethinkTab = document.getElementById('freethink-tab');
-    const groundingTab = document.getElementById('grounding-tab');
-    const worldmodelingTab = document.getElementById('worldmodeling-tab');
-    const combinedTab = document.getElementById('combined-tab');
-    const nothinkContent = document.getElementById('nothink-content');
-    const freethinkContent = document.getElementById('freethink-content');
-    const groundingContent = document.getElementById('grounding-content');
-    const worldmodelingContent = document.getElementById('worldmodeling-content');
-    const combinedContent = document.getElementById('combined-content');
-
-    // Function to re-render MathJax formulas
-    function reRenderMathJax() {
-      if ((window as any).MathJax && (window as any).MathJax.typesetPromise) {
-        (window as any).MathJax.typesetPromise();
-      }
-    }
-
-    if (nothinkTab && freethinkTab && groundingTab && worldmodelingTab && combinedTab && nothinkContent && freethinkContent && groundingContent && worldmodelingContent && combinedContent) {
-      nothinkTab.addEventListener('click', () => {
-        nothinkTab.classList.add('active');
-        freethinkTab.classList.remove('active');
-        groundingTab.classList.remove('active');
-        worldmodelingTab.classList.remove('active');
-        combinedTab.classList.remove('active');
-        nothinkContent.classList.add('active');
-        freethinkContent.classList.remove('active');
-        groundingContent.classList.remove('active');
-        worldmodelingContent.classList.remove('active');
-        combinedContent.classList.remove('active');
-        setTimeout(reRenderMathJax, 100);
-      });
-
-      freethinkTab.addEventListener('click', () => {
-        freethinkTab.classList.add('active');
-        nothinkTab.classList.remove('active');
-        groundingTab.classList.remove('active');
-        worldmodelingTab.classList.remove('active');
-        combinedTab.classList.remove('active');
-        nothinkContent.classList.remove('active');
-        freethinkContent.classList.add('active');
-        groundingContent.classList.remove('active');
-        worldmodelingContent.classList.remove('active');
-        combinedContent.classList.remove('active');
-        setTimeout(reRenderMathJax, 100);
-      });
-
-      groundingTab.addEventListener('click', () => {
-        groundingTab.classList.add('active');
-        nothinkTab.classList.remove('active');
-        freethinkTab.classList.remove('active');
-        worldmodelingTab.classList.remove('active');
-        combinedTab.classList.remove('active');
-        nothinkContent.classList.remove('active');
-        freethinkContent.classList.remove('active');
-        groundingContent.classList.add('active');
-        worldmodelingContent.classList.remove('active');
-        combinedContent.classList.remove('active');
-        setTimeout(reRenderMathJax, 100);
-      });
-
-      worldmodelingTab.addEventListener('click', () => {
-        worldmodelingTab.classList.add('active');
-        nothinkTab.classList.remove('active');
-        freethinkTab.classList.remove('active');
-        groundingTab.classList.remove('active');
-        combinedTab.classList.remove('active');
-        nothinkContent.classList.remove('active');
-        freethinkContent.classList.remove('active');
-        groundingContent.classList.remove('active');
-        worldmodelingContent.classList.add('active');
-        combinedContent.classList.remove('active');
-        setTimeout(reRenderMathJax, 100);
-      });
-
-      combinedTab.addEventListener('click', () => {
-        combinedTab.classList.add('active');
-        nothinkTab.classList.remove('active');
-        freethinkTab.classList.remove('active');
-        groundingTab.classList.remove('active');
-        worldmodelingTab.classList.remove('active');
-        nothinkContent.classList.remove('active');
-        freethinkContent.classList.remove('active');
-        groundingContent.classList.remove('active');
-        worldmodelingContent.classList.remove('active');
-        combinedContent.classList.add('active');
-        setTimeout(reRenderMathJax, 100);
-      });
-    }
-
-    // Boost #1
-    const improvement1Card = document.getElementById('improvement1-card');
-    const improvement1Content = document.getElementById('improvement1-content');
-    if (improvement1Card && improvement1Content) {
-      const improvement1ExpandIcon = improvement1Card.querySelector('.expand-icon');
-      improvement1Card.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement | null;
-        if (target && target.closest('.component-content')) return;
+  }
+  // Boost1卡片
+  const improvement1Card = document.getElementById('improvement1-card');
+  const improvement1Content = document.getElementById('improvement1-content');
+  if (improvement1Card && improvement1Content) {
+    const improvement1ExpandIcon = improvement1Card.querySelector('.expand-icon');
+    improvement1Content.classList.remove('active');
+    if (improvement1ExpandIcon) improvement1ExpandIcon.textContent = '+';
+    const header = improvement1Card.querySelector('.component-header');
+    if (header) {
+      header.addEventListener('click', (e) => {
         improvement1Content.classList.toggle('active');
         if (improvement1ExpandIcon) {
-          if (improvement1Content.classList.contains('active')) {
-            improvement1ExpandIcon.textContent = '-';
-          } else {
-            improvement1ExpandIcon.textContent = '+';
-          }
+          improvement1ExpandIcon.textContent = improvement1Content.classList.contains('active') ? '-' : '+';
         }
       });
-      // 默认展开
-      improvement1Content.classList.add('active');
-      if (improvement1ExpandIcon) improvement1ExpandIcon.textContent = '-';
     }
-
-    // Boost #2
-    const improvement2Card = document.getElementById('improvement2-card');
-    const improvement2Content = document.getElementById('improvement2-content');
-    if (improvement2Card && improvement2Content) {
-      const improvement2ExpandIcon = improvement2Card.querySelector('.expand-icon');
-      improvement2Card.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement | null;
-        if (target && target.closest('.component-content')) return;
+  }
+  // Boost2卡片
+  const improvement2Card = document.getElementById('improvement2-card');
+  const improvement2Content = document.getElementById('improvement2-content');
+  if (improvement2Card && improvement2Content) {
+    const improvement2ExpandIcon = improvement2Card.querySelector('.expand-icon');
+    improvement2Content.classList.remove('active');
+    if (improvement2ExpandIcon) improvement2ExpandIcon.textContent = '+';
+    const header = improvement2Card.querySelector('.component-header');
+    if (header) {
+      header.addEventListener('click', (e) => {
         improvement2Content.classList.toggle('active');
         if (improvement2ExpandIcon) {
-          if (improvement2Content.classList.contains('active')) {
-            improvement2ExpandIcon.textContent = '-';
-          } else {
-            improvement2ExpandIcon.textContent = '+';
-          }
+          improvement2ExpandIcon.textContent = improvement2Content.classList.contains('active') ? '-' : '+';
         }
       });
-      // 默认展开
-      improvement2Content.classList.add('active');
-      if (improvement2ExpandIcon) improvement2ExpandIcon.textContent = '-';
     }
-  });
+  }
+});
 </script>

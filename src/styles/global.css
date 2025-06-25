@@ -891,3 +891,42 @@ hr {
   color: #222;
   font-weight: 700;
 }
+
+/* 防止卡片内容在移动端溢出，图片/公式/代码块自适应 */
+.component-card img,
+.component-card svg,
+.component-card video,
+.finding-card img,
+.finding-card svg,
+.finding-card video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.component-card pre,
+.component-card .code-snippet,
+.finding-card pre,
+.finding-card .code-snippet,
+.component-card .formula,
+.finding-card .formula {
+  max-width: 100%;
+  overflow-x: auto;
+  word-break: break-word;
+  box-sizing: border-box;
+}
+
+.component-card,
+.finding-card {
+  box-sizing: border-box;
+  word-break: break-word;
+}
+
+/* 兼容Cases区块和其它卡片容器 */
+.case-cards img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}

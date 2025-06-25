@@ -159,33 +159,22 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Set up event listeners for all finding cards
     for (let i = 1; i <= 4; i++) {
       const findingCard = document.getElementById(`finding-card-${i}`);
       const findingContent = document.getElementById(`finding-content-${i}`);
-      
+      const expandIcon = findingCard?.querySelector('.expand-icon');
       if (findingCard && findingContent) {
-        const expandIcon = findingCard.querySelector('.expand-icon') as HTMLElement | null;
-        
-        // Initialize all cards as expanded
-        findingContent.classList.add('active');
-        if (expandIcon) {
-          expandIcon.textContent = '-';
-        }
-        
-        findingCard.addEventListener('click', (e: Event) => {
-          const target = e.target as HTMLElement;
-          if (target.closest && target.closest('.finding-content')) return;
-          
-          findingContent.classList.toggle('active');
-          if (expandIcon) {
-            if (findingContent.classList.contains('active')) {
-              expandIcon.textContent = '-';
-            } else {
-              expandIcon.textContent = '+';
+        findingContent.classList.remove('active');
+        if (expandIcon) expandIcon.textContent = '+';
+        const header = findingCard.querySelector('.finding-header');
+        if (header) {
+          header.addEventListener('click', (e) => {
+            findingContent.classList.toggle('active');
+            if (expandIcon) {
+              expandIcon.textContent = findingContent.classList.contains('active') ? '-' : '+';
             }
-          }
-        });
+          });
+        }
       }
     }
   });
