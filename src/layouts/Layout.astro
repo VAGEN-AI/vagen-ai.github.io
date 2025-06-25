@@ -23,23 +23,11 @@ const { title } = Astro.props;
 
     </head>
     <body>
-        <svg width="100%" height="40" style="display:block;" aria-hidden="true">
-            <line x1="0" y1="20" x2="100%" y2="20" stroke="#ffb6ec" stroke-width="2" stroke-dasharray="8,8"/>
-            <circle cx="50" cy="20" r="6" fill="#aeefff"/>
-            <rect x="90" y="10" width="12" height="12" fill="none" stroke="#b6e0ff" stroke-width="2"/>
-            <polyline points="120,30 140,10 160,30" fill="none" stroke="#ffb6ec" stroke-width="2"/>
-        </svg>
         <Header /> {/* Add the Header component here */}
         <main>
             <slot /> {/* Page content from index.astro goes here */}
         </main>
         <Footer />
-        <svg width="100%" height="40" style="display:block;" aria-hidden="true">
-            <line x1="0" y1="20" x2="100%" y2="20" stroke="#aeefff" stroke-width="2" stroke-dasharray="12,8"/>
-            <circle cx="80" cy="20" r="5" fill="#ffb6ec"/>
-            <rect x="150" y="10" width="10" height="10" fill="none" stroke="#b6e0ff" stroke-width="2"/>
-            <polyline points="180,30 200,10 220,30" fill="none" stroke="#aeefff" stroke-width="2"/>
-        </svg>
     </body>
 </html>
 

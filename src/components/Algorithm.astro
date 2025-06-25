@@ -48,69 +48,6 @@ const mathFormulas = {
     <script is:inline src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script is:inline id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" onload="if(window.MathJax) window.MathJax.typesetPromise()"></script>
     
-   
-    <!-- VAGEN Framework Visualization -->
-    <div class="algorithm-visualization">
-      <div class="visual-container">
-        <div class="flow-step" id="step-observation">
-          <div class="step-icon">🖼️</div>
-          <div class="step-content">
-            <h4>Observation</h4>
-          </div>
-        </div>
-        <div class="flow-arrow-wrapper">
-          <div class="flow-arrow-css">
-            <div class="arrow-line"></div>
-            <div class="arrow-head"></div>
-          </div>
-        </div>
-        <div class="flow-step" id="step-reasoning">
-          <div class="step-icon">🧠</div>
-          <div class="step-content">
-            <h4>Visual Reasoning</h4>
-          </div>
-        </div>
-        <div class="flow-arrow-wrapper">
-          <div class="flow-arrow-css">
-            <div class="arrow-line"></div>
-            <div class="arrow-head"></div>
-          </div>
-        </div>
-        <div class="flow-step" id="step-action">
-          <div class="step-icon">⚡</div>
-          <div class="step-content">
-            <h4>Action</h4>
-          </div>
-        </div>
-        <div class="flow-arrow-wrapper">
-          <div class="flow-arrow-css">
-            <div class="arrow-line"></div>
-            <div class="arrow-head"></div>
-          </div>
-        </div>
-        <div class="flow-step" id="step-reward">
-          <div class="step-icon">🏆</div>
-          <div class="step-content">
-            <h4>Reward</h4>
-          </div>
-        </div>
-        
-        <!-- Repeat arrow -->
-        <div class="repeat-arrow-container">
-          <div class="repeat-arrow-css">
-            <div class="repeat-line"></div>
-            <div class="repeat-arrow-head"></div>
-            <div class="repeat-text">Multi-turn</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="diagram-placeholder">
-    </div>
-    
-    <div class="spacer" style="height: 2rem;"></div>
-
     <div class="algorithm-components">
       
       <div class="component-card pomdp-card" id="pomdp-card">
@@ -485,171 +422,12 @@ const mathFormulas = {
     margin-bottom: 3rem;
   }
 
-  .algorithm-visualization {
-    margin: 2rem 0 3rem 0;
-  }
-
-  .visual-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    padding: 2rem;
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
-    border: 1px solid rgba(34, 197, 94, 0.2);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.1);
-    position: relative;
-    backdrop-filter: blur(10px);
-  }
-
-  .flow-step {
+  .algorithm-components {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
-    border: 2px solid transparent;
-    border-radius: 12px;
-    padding: 1.5rem;
-    width: 140px;
-    height: 140px;
-    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 2;
-  }
-
-  .flow-step:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(34, 197, 94, 0.15);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 100%);
-  }
-
-  .flow-step.active {
-    border-color: var(--accent-color);
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.1) 100%);
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
-  }
-
-  .step-icon {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .step-content h4 {
-    margin: 0;
-    color: var(--text-primary);
-    font-size: 1rem;
-    text-align: center;
-  }
-
-  .flow-arrow-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 1rem;
-  }
-
-  .flow-arrow-css {
-    position: relative;
-    width: 50px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-  }
-
-  .arrow-line {
-    width: 40px;
-    height: 2px;
-    background-color: var(--accent-color);
-  }
-
-  .arrow-head {
-    width: 0;
-    height: 0;
-    border-left: 8px solid var(--accent-color);
-    border-top: 6px solid transparent;
-    border-bottom: 6px solid transparent;
-    margin-left: -2px;
-  }
-
-  .repeat-arrow-container {
-    position: absolute;
-    width: calc(100% - 4rem);
-    height: 50px;
-    bottom: -30px;
-    left: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .repeat-arrow-css {
-    position: relative;
+    gap: 2rem;
     width: 100%;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .repeat-line {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background-color: var(--accent-color);
-    transform: translateY(-50%);
-  }
-
-  .repeat-arrow-head {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    width: 0;
-    height: 0;
-    border-left: 8px solid var(--accent-color);
-    border-top: 6px solid transparent;
-    border-bottom: 6px solid transparent;
-    transform: translateY(-50%);
-  }
-
-  .repeat-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    padding: 0 10px;
-    color: var(--text-primary);
-    font-size: 15px;
-    font-weight: 700;
-    z-index: 1;
-    backdrop-filter: blur(10px);
-  }
-
-  .pomdp-arrow-css {
-    position: relative;
-    width: 50px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-  }
-
-  .diagram-placeholder {
-    text-align: center;
-    margin: 2rem 0;
-  }
-
-  .diagram-placeholder img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    margin: 0 auto;
   }
 
   .component-card {
@@ -661,6 +439,9 @@ const mathFormulas = {
     margin-bottom: 2rem;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .component-card:hover {
@@ -874,52 +655,15 @@ const mathFormulas = {
     line-height: 1.5;
   }
 
-  @media (max-width: 768px) {
-    .section-title {
-      font-size: 1.8rem;
-    }
-    
-    .visual-container {
-      flex-direction: column;
-      padding: 1.5rem;
-      gap: 2rem;
-    }
-    
-    .flow-arrow-wrapper {
-      transform: rotate(90deg);
-      margin: 1rem 0;
-    }
-    
-    .repeat-arrow-container {
-      display: none;
-    }
-    
-    .interactive-pomdp-viz {
+  @media (max-width: 900px) {
+    .algorithm-components {
       flex-direction: column;
       gap: 2rem;
     }
-    
-    .pomdp-arrow {
-      transform: rotate(90deg);
-      margin: 1rem 0;
-    }
-    
-    .pomdp-state {
+    .component-card {
+      flex: unset;
       width: 100%;
-      max-width: 300px;
-    }
-    
-    .strategy-tabs {
-      flex-direction: column;
-    }
-    
-    .strategy-tab {
-      border-right: none;
-      border-bottom: 1px solid #ddd;
-    }
-    
-    .strategy-tab:last-child {
-      border-bottom: none;
+      max-width: 100%;
     }
   }
 </style>
@@ -1075,34 +819,6 @@ const mathFormulas = {
         setTimeout(reRenderMathJax, 100);
       });
     }
-
-    // Interactive algorithm flow
-    const flowSteps = document.querySelectorAll('.flow-step');
-    let currentStepIndex = 0;
-
-    function highlightNextStep() {
-      // Reset all steps
-      flowSteps.forEach(step => step.classList.remove('active'));
-      
-      // Highlight current step
-      if (flowSteps[currentStepIndex]) {
-        flowSteps[currentStepIndex].classList.add('active');
-      }
-      
-      // Move to next step
-      currentStepIndex = (currentStepIndex + 1) % flowSteps.length;
-    }
-
-    // Auto-advance flow steps
-    setInterval(highlightNextStep, 3000);
-
-    // Initial highlight
-    if (flowSteps[0]) {
-      flowSteps[0].classList.add('active');
-    }
-
-    // Re-render MathJax after page loads
-    setTimeout(reRenderMathJax, 1000);
 
     // Boost #1
     const improvement1Card = document.getElementById('improvement1-card');
