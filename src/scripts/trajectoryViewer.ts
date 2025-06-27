@@ -93,7 +93,7 @@ export function initTrajectoryViewer() {
     try {
       showLoading();
       
-      const response = await fetch('/data/trajectories/qwen2.5-0.5b/index.json');
+      const response = await fetch('data/trajectories/qwen2.5-0.5b/index.json');
       if (!response.ok) {
         throw new Error(`Failed to load task index: ${response.status} ${response.statusText}`);
       }
@@ -263,7 +263,7 @@ export function initTrajectoryViewer() {
     }
     
     // Update state and action display
-    if (stateImageElement) stateImageElement.src = step.state.image || '/placeholder-state.png';
+    if (stateImageElement) stateImageElement.src = step.state.image || 'placeholder-state.png';
     if (stateTextElement) stateTextElement.textContent = step.state.description || '';
     if (reasoningTextElement) reasoningTextElement.innerHTML = `<p>${step.reasoning || ''}</p>`;
     if (actionTextElement) actionTextElement.textContent = step.action || '';

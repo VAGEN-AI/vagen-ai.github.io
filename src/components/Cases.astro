@@ -5,60 +5,16 @@
   <div class="section-container">
     <h2 class="section-title">Cases</h2>
     <div class="case-cards" style="display:flex;flex-direction:column;align-items:center;gap:2.2rem;">
-      <div class="component-card" id="case-frozenlake">
+      <div class="component-card" id="case-appendix">
         <div class="component-header" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; box-sizing: border-box;">
-          <h3 class="component-title" style="margin: 0; font-size: 1.3rem; font-weight: 600;">FrozenLake: Visual reasoning enables robust navigation in sparse-reward environments.</h3>
+          <h3 class="component-title" style="margin: 0; font-size: 1.3rem; font-weight: 600;">Case : Enhanced Visual State Reasoning with VAGEN-Full</h3>
           <div class="expand-icon">+</div>
         </div>
-        <div class="component-content" id="case-frozenlake-content">
-          <img src="figures/frozenlake_comparizon.png" alt="FrozenLake Comparison" style="width:100%;max-width:950px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);margin:1.5rem auto;display:block;" />
-        </div>
-      </div>
-      <div class="component-card" id="case-navigation">
-        <div class="component-header" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); color: white; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; box-sizing: border-box;">
-          <h3 class="component-title" style="margin: 0; font-size: 1.3rem; font-weight: 600;">Navigation: Explicit state reasoning improves multi-turn path planning.</h3>
-          <div class="expand-icon">+</div>
-        </div>
-        <div class="component-content" id="case-navigation-content">
-          <img src="figures/navigation_comparison.png" alt="Navigation Comparison" style="width:100%;max-width:950px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);margin:1.5rem auto;display:block;" />
-        </div>
-      </div>
-    </div>
-    <div class="component-card" id="case-animated">
-      <div class="component-header" style="background: linear-gradient(135deg, #86efac 0%, #4ade80 100%); color: white; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; box-sizing: border-box;">
-        <h3 class="component-title" style="margin: 0; font-size: 1.3rem; font-weight: 600;">Animated Case Studies</h3>
-        <div class="expand-icon">+</div>
-      </div>
-      <div class="component-content" id="case-animated-content">
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:2rem;justify-items:center;align-items:flex-start;">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
-            <img src="figures/frozenlake_case1.gif" alt="FrozenLake Case 1" style="width:100%;max-width:200px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);" />
-            <img src="figures/frozenlake_case2.gif" alt="FrozenLake Case 2" style="width:100%;max-width:200px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);" />
-            <div style="font-size:0.98rem;color:#3a3a3a;text-align:center;">FrozenLake</div>
+        <div class="component-content" id="case-appendix-content">
+          <img src="figures/case_study_appendix_1.png" alt="Case Study Appendix" style="width:100%;max-width:950px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);margin:1.5rem auto;display:block;" />
+          <div style="max-width:950px;margin:1rem auto 0 auto;font-size:0.98rem;color:#666;text-align:center;line-height:1.5;">
+            VAGEN-Full vs. VAGEN-Base in Navigation, Sokoban and Frozenlake (left to right). For the same environment, VAGEN-Full is the left column, VAGEN-Base is the right column.
           </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
-            <img src="figures/navigation_case1.gif" alt="Navigation Case 1" style="width:100%;max-width:200px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);" />
-            <img src="figures/navigation_case2.gif" alt="Navigation Case 2" style="width:100%;max-width:200px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);" />
-            <div style="font-size:0.98rem;color:#3a3a3a;text-align:center;">Navigation</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
-            <img src="figures/sokoban_case1.gif" alt="Sokoban Case 1" style="width:100%;max-width:200px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);" />
-            <img src="figures/sokoban_case2.gif" alt="Sokoban Case 2" style="width:100%;max-width:200px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);" />
-            <div style="font-size:0.98rem;color:#3a3a3a;text-align:center;">Sokoban</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
-            <img src="figures/maniskill_case1.gif" alt="ManiSkill Case 1" style="width:100%;max-width:200px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);" />
-            <img src="figures/maniskill_case2.gif" alt="ManiSkill Case 2" style="width:100%;max-width:200px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);" />
-            <div style="font-size:0.98rem;color:#3a3a3a;text-align:center;">ManiSkill</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
-            <img src="figures/SVG_generate.gif" alt="SVG Generate" style="width:100%;max-width:200px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);" />
-            <img src="figures/SVG_target.gif" alt="SVG Target" style="width:100%;max-width:200px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);" />
-            <div style="font-size:0.98rem;color:#3a3a3a;text-align:center;">SVG</div>
-          </div>
-        </div>
-        <div style="max-width:900px;margin:1.5rem auto 0 auto;font-size:0.98rem;color:#666;text-align:center;">
-          <span style="font-size:1.1em;vertical-align:super;">*</span> For SVG: <b>Top</b> is the model's generated SVG, <b>Bottom</b> is the target SVG.
         </div>
       </div>
     </div>
@@ -66,53 +22,19 @@
 </section>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // FrozenLake card
-    const frozenlakeCard = document.getElementById('case-frozenlake');
-    const frozenlakeContent = document.getElementById('case-frozenlake-content');
-    if (frozenlakeCard && frozenlakeContent) {
-      const expandIcon = frozenlakeCard.querySelector('.expand-icon');
-      frozenlakeContent.classList.remove('active');
+    // Case Study Appendix card
+    const appendixCard = document.getElementById('case-appendix');
+    const appendixContent = document.getElementById('case-appendix-content');
+    if (appendixCard && appendixContent) {
+      const expandIcon = appendixCard.querySelector('.expand-icon');
+      appendixContent.classList.remove('active');
       if (expandIcon) expandIcon.textContent = '+';
-      const header = frozenlakeCard.querySelector('.component-header');
+      const header = appendixCard.querySelector('.component-header');
       if (header) {
         header.addEventListener('click', (e) => {
-          frozenlakeContent.classList.toggle('active');
+          appendixContent.classList.toggle('active');
           if (expandIcon) {
-            expandIcon.textContent = frozenlakeContent.classList.contains('active') ? '-' : '+';
-          }
-        });
-      }
-    }
-    // Navigation card
-    const navigationCard = document.getElementById('case-navigation');
-    const navigationContent = document.getElementById('case-navigation-content');
-    if (navigationCard && navigationContent) {
-      const expandIcon = navigationCard.querySelector('.expand-icon');
-      navigationContent.classList.remove('active');
-      if (expandIcon) expandIcon.textContent = '+';
-      const header = navigationCard.querySelector('.component-header');
-      if (header) {
-        header.addEventListener('click', (e) => {
-          navigationContent.classList.toggle('active');
-          if (expandIcon) {
-            expandIcon.textContent = navigationContent.classList.contains('active') ? '-' : '+';
-          }
-        });
-      }
-    }
-    // Animated Case Studies card
-    const animatedCard = document.getElementById('case-animated');
-    const animatedContent = document.getElementById('case-animated-content');
-    if (animatedCard && animatedContent) {
-      const expandIcon = animatedCard.querySelector('.expand-icon');
-      animatedContent.classList.remove('active');
-      if (expandIcon) expandIcon.textContent = '+';
-      const header = animatedCard.querySelector('.component-header');
-      if (header) {
-        header.addEventListener('click', (e) => {
-          animatedContent.classList.toggle('active');
-          if (expandIcon) {
-            expandIcon.textContent = animatedContent.classList.contains('active') ? '-' : '+';
+            expandIcon.textContent = appendixContent.classList.contains('active') ? '-' : '+';
           }
         });
       }

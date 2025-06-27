@@ -67,7 +67,7 @@
           <h3 class="display-subtitle">Visual State</h3>
           <div class="state-content">
             <div class="state-image">
-              <img id="state-image" src="/placeholder-state.png" alt="Current visual state" />
+              <img id="state-image" src="placeholder-state.png" alt="Current visual state" />
             </div>
             <div class="state-description">
               <p id="state-text">Visual state description will appear here. This represents the environment's current visual state at the selected step.</p>
@@ -241,7 +241,7 @@
         
         // Add timestamp or random number to prevent caching
         const timestamp = new Date().getTime();
-        const indexUrl = `/data/trajectories/${currentModel}/index.json?t=${timestamp}`;
+        const indexUrl = `data/trajectories/${currentModel}/index.json?t=${timestamp}`;
         console.log("Loading task index from:", indexUrl);
         
         const response = await fetch(indexUrl, { 
@@ -300,10 +300,10 @@
         // Ensure using the correct model path
         let dataPath = taskInfo.dataFile;
         // Ensure the path includes model name
-        if (!dataPath.includes(`/data/trajectories/${currentModel}/`)) {
+        if (!dataPath.includes(`data/trajectories/${currentModel}/`)) {
           // Completely replace dataPath with the correct path
           const fileName = dataPath.split('/').pop(); // Get the file name
-          dataPath = `/data/trajectories/${currentModel}/${fileName}`;
+          dataPath = `data/trajectories/${currentModel}/${fileName}`;
         }
         
         // Add timestamp to avoid caching
