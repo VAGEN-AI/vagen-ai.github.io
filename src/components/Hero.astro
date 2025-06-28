@@ -184,6 +184,38 @@
 
   // Run when page is loaded
   document.addEventListener('DOMContentLoaded', fetchGitHubStats);
+
+  // SVG GIF 同步功能
+  function syncSVGGifs() {
+    const svgGenerate = document.querySelector('img[src="figures/SVG_generate.gif"]') as HTMLImageElement;
+    const svgTarget = document.querySelector('img[src="figures/SVG_target.gif"]') as HTMLImageElement;
+    
+    if (svgGenerate && svgTarget) {
+      console.log('SVG GIFs found, attempting to sync...');
+      
+      // 简单的同步方法：当页面加载完成后，确保两个 GIF 都正确加载
+      svgGenerate.addEventListener('load', () => {
+        console.log('SVG Generate loaded');
+      });
+      
+      svgTarget.addEventListener('load', () => {
+        console.log('SVG Target loaded');
+      });
+      
+      svgGenerate.addEventListener('error', () => {
+        console.error('Failed to load SVG Generate GIF');
+      });
+      
+      svgTarget.addEventListener('error', () => {
+        console.error('Failed to load SVG Target GIF');
+      });
+    } else {
+      console.log('SVG GIFs not found');
+    }
+  }
+
+  // 页面加载完成后初始化 SVG 同步
+  document.addEventListener('DOMContentLoaded', syncSVGGifs);
 </script> 
 
 <style>

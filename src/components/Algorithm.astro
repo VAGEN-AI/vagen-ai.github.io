@@ -738,5 +738,26 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   }
+
+  // 策略切换功能
+  const strategyTabs = document.querySelectorAll('.strategy-tab');
+  const strategyDetails = document.querySelectorAll('.strategy-details');
+  
+  strategyTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const strategy = tab.getAttribute('data-strategy');
+      
+      // 移除所有活动状态
+      strategyTabs.forEach(t => t.classList.remove('active'));
+      strategyDetails.forEach(d => d.classList.remove('active'));
+      
+      // 添加当前活动状态
+      tab.classList.add('active');
+      const targetContent = document.getElementById(`${strategy}-content`);
+      if (targetContent) {
+        targetContent.classList.add('active');
+      }
+    });
+  });
 });
 </script>
