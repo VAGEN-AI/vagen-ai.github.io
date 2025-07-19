@@ -87,15 +87,16 @@
 
 /* Authors section in Hero component */
 .authors-section {
-  margin-top: 3rem;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
-  padding: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  background: white;
+  padding: 1.5rem 2rem;
   border-radius: 8px;
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .hero-section .authors-list {
