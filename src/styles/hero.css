@@ -40,8 +40,20 @@
 .description { 
   font-size: 1.5rem; 
   color: var(--text-secondary); 
-  margin-bottom: 2rem; 
+  margin-bottom: 0.5rem; 
   line-height: 1.6; 
+}
+
+.news-banner {
+  display: block;
+  width: 100%;
+  margin: 1.5rem auto 2rem auto;
+}
+
+.news-text {
+  color: #dc2626;
+  font-weight: 400;
+  font-size: 1.5rem;
 }
 
 .cta-button { 
