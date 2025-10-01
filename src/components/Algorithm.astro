@@ -102,43 +102,45 @@ const mathFormulas = {
                   <div class="strategy-tabs">
                     <div class="strategy-tab active" data-strategy="nothink" id="nothink-tab">NoThink</div>
                     <div class="strategy-tab" data-strategy="freethink" id="freethink-tab">FreeThink</div>
-                    <div class="strategy-tab" data-strategy="grounding" id="grounding-tab">Grounding</div>
-                    <div class="strategy-tab" data-strategy="worldmodeling" id="worldmodeling-tab">WorldModeling</div>
-                    <div class="strategy-tab" data-strategy="combined" id="combined-tab">Grounding+WM</div>
+                    <div class="strategy-tab" data-strategy="grounding" id="grounding-tab">StateEstimation</div>
+                    <div class="strategy-tab" data-strategy="worldmodeling" id="worldmodeling-tab">TransitionModeling</div>
+                    <div class="strategy-tab" data-strategy="combined" id="combined-tab">WorldModeling</div>
                   </div>
                   <div class="strategy-content">
                     <div class="strategy-details active" id="nothink-content">
-                      <p><strong>NoThink:</strong> Direct action generation without explicit reasoning</p>
+                      <p><strong>NoThink:</strong> We train the VLM agent to generate only an executable action <span set:html="\\(\\bar{a}_t\\)" />, and the output action token <span set:html="\\(a_t\\)" /> is <code>&lt;answer&gt;</code> <span set:html="\\(\\bar{a}_t\\)" /> <code>&lt;/answer&gt;</code>.</p>
                       <div class="code-snippet">
                         <code>&lt;answer&gt;...&lt;/answer&gt;</code>
                       </div>
+                      <p>Learning: <span set:html="\\(z_t = \\emptyset\\)" /></p>
                     </div>
                     <div class="strategy-details" id="freethink-content">
-                      <p><strong>FreeThink:</strong> Emergent reasoning without specific structure</p>
+                      <p><strong>FreeThink:</strong> We train the VLM agent to produce any form of natural language reasoning, allowing visual state reasoning to emerge without a predefined structure. The agent generates action tokens as <code>&lt;think&gt;</code> <span set:html="\\(z_t\\)" /> <code>&lt;/think&gt;</code> <code>&lt;answer&gt;</code> <span set:html="\\(\\bar{a}_t\\)" /> <code>&lt;/answer&gt;</code>.</p>
                       <div class="code-snippet">
                         <code>&lt;think&gt;...&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
                       </div>
+                      <p>Learning: <span set:html="\\(z_t \\neq \\emptyset\\)" />, and <span set:html="\\(z_t\\)" /> is natural language tokens.</p>
                     </div>
                     <div class="strategy-details" id="grounding-content">
                       <p><strong>Grounding:</strong> Explicit current state description</p>
                       <div class="code-snippet">
                         <code>&lt;think&gt;&lt;observation&gt;...&lt;/observation&gt;...&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
                       </div>
-                      <p>Learning: <span set:html={mathFormulas.grounding} /></p>
+                      <p>Learning: <span set:html="\\(z_t = \\langle s^b_t, a^b_t \\rangle\\)" />, learning to approximate <span set:html="\\(s^b_t \\rightarrow s_t\\)" /></p>
                     </div>
                     <div class="strategy-details" id="worldmodeling-content">
                       <p><strong>WorldModeling:</strong> Explicit future state prediction</p>
                       <div class="code-snippet">
                         <code>&lt;think&gt;...&lt;prediction&gt;...&lt;/prediction&gt;&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
                       </div>
-                      <p>Learning: <span set:html={mathFormulas.worldModeling} /></p>
+                      <p>Learning: <span set:html="\\(z_t = \\langle a^b_t, s^b_{t+1} \\rangle\\)" />, learning to approximate <span set:html="\\(s^b_{t+1} \\rightarrow s_{t+1}\\)" /></p>
                     </div>
                     <div class="strategy-details" id="combined-content">
-                      <p><strong>Grounding+WorldModeling:</strong> Combined current and future state reasoning</p>
+                      <p><strong>WorldModeling:</strong> Combined current and future state reasoning</p>
                       <div class="code-snippet">
-                        <code>&lt;think&gt;&lt;observation&gt;...&lt;/observation&gt;&lt;reasoning&gt;...&lt;/reasoning&gt;&lt;prediction&gt;...&lt;/prediction&gt;&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
+                        <code>&lt;think&gt;&lt;observation&gt;...&lt;/observation&gt;...&lt;prediction&gt;...&lt;/prediction&gt;&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
                       </div>
-                      <p>Learning: <span set:html={mathFormulas.combined} /></p>
+                      <p>Learning: <span set:html="\\(z_t = \\langle s^b_t, a^b_t, s^b_{t+1} \\rangle\\)" />, learning to approximate <span set:html="\\(s^b_t \\rightarrow s_t, s^b_{t+1} \\rightarrow s_{t+1}\\)" /></p>
                     </div>
                   </div>
                 </div>
@@ -243,16 +245,16 @@ const mathFormulas = {
         </div>
       </div>
 
-      <!-- Improvement 1: Visual Reasoning Reward -->
+      <!-- Improvement 1: WorldModeling Reward -->
       <div class="component-card" id="improvement1-card">
         <div class="component-header">
-          <h3 class="component-title">Boost #1: Visual Reasoning Reward</h3>
+          <h3 class="component-title">Boost #1: WorldModeling Reward</h3>
           <div class="expand-icon">-</div>
         </div>
         <div class="component-content" id="improvement1-content">
           <p>We use LLM-as-Judge to reward the agent when its predicted or observed visual state matches the ground truth.</p>
           <div class="visual-reward-carousel" style="text-align:center; margin: 1.5em 0;">
-            <img id="boost1-carousel-img" src="figures/1.png" alt="Visual Reasoning Reward Example" style="max-width: 800px; width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); margin-bottom: 0.5em; transition: opacity 0.3s;" />
+            <img id="boost1-carousel-img" src="figures/1.png" alt="WorldModeling Reward Example" style="max-width: 800px; width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); margin-bottom: 0.5em; transition: opacity 0.3s;" />
             <input type="range" id="boost1-progress" min="0" max="5" value="0" style="width: 60%; margin-top: 0.5em; accent-color: var(--accent-color);" />
           </div>
           <script is:inline>

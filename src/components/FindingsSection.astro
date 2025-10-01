@@ -12,7 +12,7 @@
           <div class="expand-icon">-</div>
         </div>
         <div class="finding-content" id="finding-content-1">
-          <p>Vanilla VLMs struggle with multi-turn agentic tasks requiring visual state understanding. Integrating explicit visual state reasoning steps—specifically <strong>Grounding</strong> and <strong>World Modeling</strong>—into the VLM's thinking process during RL training significantly enhances task performance. The combined Grounding-WorldModeling strategy, in particular, demonstrates strong and stable performance, enabling a trained open-source VLM to outperform its un-trained counterpart and even surpass benchmarked proprietary models.</p>
+          <p>Vanilla VLMs struggle with multi-turn agentic tasks requiring visual state understanding. Integrating explicit visual state reasoning steps—specifically <strong>StateEstimation</strong> and <strong>TransitionModeling</strong>—into the VLM's thinking process during RL training significantly enhances task performance. The combined WorldModeling strategy, in particular, demonstrates strong and stable performance, enabling a trained open-source VLM to outperform its un-trained counterpart and even surpass benchmarked proprietary models.</p>
         </div>
       </div>
       
@@ -39,7 +39,7 @@
         <div class="finding-content" id="finding-content-3">
           <p>To specifically improve visual state reasoning, Visual Reasoning RL incorporates:</p>
           <ul>
-            <li><strong>Turn-level Visual Reasoning Reward:</strong> An LLM-as-a-Judge assesses the accuracy of the VLM's explicit state descriptions and predictions, effectively supervising reasoning.</li>
+            <li><strong>Turn-level WorldModeling Reward:</strong> An LLM-as-a-Judge assesses the accuracy of the VLM's explicit state descriptions and predictions, effectively supervising reasoning.</li>
             <li><strong>Bi-Level General Advantage Estimation (GAE):</strong> Estimates advantages at both turn and token levels, providing finer-grained reward signals and improving credit assignment.</li>
           </ul>
           <p>This approach consistently outperforms Base RL, leading to improved reasoning quality, higher task success rates, and better generalization.</p>
@@ -56,7 +56,7 @@
           <ul>
             <li><strong>Reasoning Stability Varies by Task:</strong> While reasoning in tasks like Navigation and PrimitiveSkill (and often Sokoban) appears relatively normal and beneficial with explicit rewards, tasks like FrozenLake show more erratic reasoning patterns, potentially correlating with its lower performance and the difficulty of its visual state reasoning.</li>
             <li><strong>Potential for Reward Hacking:</strong> Instances of "reward hacking" were observed, particularly with certain reward configurations. Agents might learn to generate reasoning-like text that satisfies the reward mechanism without genuinely reflecting deep understanding or accurate future prediction.</li>
-            <li><strong>Bi-Level GAE as a Double-Edged Sword:</strong> While Bi-Level GAE can improve credit assignment, its interaction with visual reasoning rewards might sometimes allow for more "divergent" or less grounded thinking if the reasoning reward itself can be easily hacked.</li>
+            <li><strong>Bi-Level GAE as a Double-Edged Sword:</strong> While Bi-Level GAE can improve credit assignment, its interaction with WorldModeling Rewards might sometimes allow for more "divergent" or less grounded thinking if the reasoning reward itself can be easily hacked.</li>
             <li><strong>Convergence to Standardized Phrasing:</strong> Agents across different environments tend to converge towards using a more uniform, templated sentence structure for their reasoning and actions over prolonged training, primarily varying only the directional or specific action tokens.</li>
             <li><strong>Rule-Based Filtering as a Potential Mitigation:</strong> For simpler forms of reward hacking where reasoning outputs fail basic semantic checks, simple rule-based filtering before reward assignment could be a pragmatic interim solution.</li>
           </ul>
