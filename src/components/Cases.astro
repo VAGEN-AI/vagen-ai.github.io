@@ -6,9 +6,8 @@
     <h2 class="section-title">Cases</h2>
     <div class="case-cards" style="display:flex;flex-direction:column;align-items:center;gap:2.2rem;">
       <div class="component-card" id="case-appendix">
-        <div class="component-header" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; box-sizing: border-box;">
+        <div class="component-header" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; padding: 1.5rem; display: flex; justify-content: flex-start; align-items: center; gap: 1rem; cursor: default; width: 100%; box-sizing: border-box;">
           <h3 class="component-title" style="margin: 0; font-size: 1.3rem; font-weight: 600;">Case : Enhanced Visual State Reasoning with VAGEN-Full</h3>
-          <div class="expand-icon">+</div>
         </div>
         <div class="component-content" id="case-appendix-content">
           <img src="figures/case_study_appendix_1.png" alt="Case Study Appendix" style="width:100%;max-width:950px;border-radius:10px;box-shadow:0 2px 8px rgba(34,197,94,0.10);margin:1.5rem auto;display:block;" />
@@ -20,27 +19,6 @@
     </div>
   </div>
 </section>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Case Study Appendix card
-    const appendixCard = document.getElementById('case-appendix');
-    const appendixContent = document.getElementById('case-appendix-content');
-    if (appendixCard && appendixContent) {
-      const expandIcon = appendixCard.querySelector('.expand-icon');
-      appendixContent.classList.remove('active');
-      if (expandIcon) expandIcon.textContent = '+';
-      const header = appendixCard.querySelector('.component-header');
-      if (header) {
-        header.addEventListener('click', (e) => {
-          appendixContent.classList.toggle('active');
-          if (expandIcon) {
-            expandIcon.textContent = appendixContent.classList.contains('active') ? '-' : '+';
-          }
-        });
-      }
-    }
-  });
-</script>
 <style>
   .component-card {
     background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
@@ -63,9 +41,10 @@
     color: white;
     padding: 1.5rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    cursor: pointer;
+    gap: 1rem;
+    cursor: default;
     width: 100%;
     box-sizing: border-box;
   }
@@ -74,28 +53,12 @@
     font-size: 1.3rem;
     font-weight: 600;
   }
-  .expand-icon {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-left: 1rem;
-    cursor: pointer;
-    user-select: none;
-    transition: transform 0.3s ease;
-  }
   .component-content {
     padding: 2rem;
-    display: none;
+    display: block;
     color: var(--text-secondary);
     background-color: rgba(255, 255, 255, 0.8);
     width: 100%;
     box-sizing: border-box;
-  }
-  .component-content.active {
-    display: block !important;
-    animation: fadeIn 0.5s ease;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
   }
 </style> 

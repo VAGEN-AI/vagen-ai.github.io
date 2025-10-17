@@ -8,6 +8,7 @@
     {/* Citation Block */}
     <div class="citation-section">
       <p>If you find VAGEN useful in your research, we would appreciate it if you consider citing our work:</p>
+      <p class="conference-note">Accepted to NeurIPS 2025</p>
       <div class="citation-block">
         <div class="code-container">
           <button id="copy-button" aria-label="Copy citation" class="copy-button-corner">
@@ -19,9 +20,10 @@
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
           </button>
-          <pre><code>{`@misc{wang2025vagen,
-  title={VAGEN:Reinforcing World Model Reasoning for Multi-Turn VLM Agents},
+          <pre><code>{`@inproceedings{wang2025vagen,
+  title={VAGEN: Reinforcing World Model Reasoning for Multi-Turn VLM Agents},
   author={Kangrui Wang* and Pingyue Zhang* and Zihan Wang* and Yaning Gao* and Linjie Li* and Qineng Wang and Hanyang Chen and Chi Wan and Yiping Lu and Zhengyuan Yang and Lijuan Wang and Ranjay Krishna and Jiajun Wu and Li Fei-Fei and Yejin Choi and Manling Li},
+  booktitle={Proceedings of the 38th Conference on Neural Information Processing Systems (NeurIPS)},
   year={2025},
   url={https://vagen-ai.github.io/}
 }`}</code></pre>
@@ -70,6 +72,13 @@
     font-size: 1.1rem;
     margin-bottom: 1.5rem;
     text-align: center;
+  }
+
+  .citation-section .conference-note {
+    font-weight: 600;
+    color: #065f46;
+    margin-top: -0.75rem;
+    margin-bottom: 1.75rem;
   }
 
   .citation-block {

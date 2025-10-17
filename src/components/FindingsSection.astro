@@ -9,7 +9,6 @@
       <div class="finding-card" id="finding-card-1">
         <div class="finding-header">
           <h3 class="finding-title">Finding 1: Explicit Visual State Reasoning is Crucial for Multi-Turn VLM Agents</h3>
-          <div class="expand-icon">-</div>
         </div>
         <div class="finding-content" id="finding-content-1">
           <p>Vanilla VLMs struggle with multi-turn agentic tasks requiring visual state understanding. Integrating explicit visual state reasoning steps—specifically <strong>StateEstimation</strong> and <strong>TransitionModeling</strong>—into the VLM's thinking process during RL training significantly enhances task performance. The combined WorldModeling strategy, in particular, demonstrates strong and stable performance, enabling a trained open-source VLM to outperform its un-trained counterpart and even surpass benchmarked proprietary models.</p>
@@ -19,7 +18,6 @@
       <div class="finding-card" id="finding-card-2">
         <div class="finding-header">
           <h3 class="finding-title">Finding 2: Optimal Visual State Representation is Task-Dependent</h3>
-          <div class="expand-icon">-</div>
         </div>
         <div class="finding-content" id="finding-content-2">
           <p>The choice of representation for visual states during explicit reasoning significantly impacts performance:</p>
@@ -34,7 +32,6 @@
       <div class="finding-card" id="finding-card-3">
         <div class="finding-header">
           <h3 class="finding-title">Finding 3: Visual Reasoning RL with Targeted Rewards and Bi-Level GAE Enhances Reasoning Quality and Task Success</h3>
-          <div class="expand-icon">-</div>
         </div>
         <div class="finding-content" id="finding-content-3">
           <p>To specifically improve visual state reasoning, Visual Reasoning RL incorporates:</p>
@@ -49,7 +46,6 @@
       <div class="finding-card" id="finding-card-4">
         <div class="finding-header">
           <h3 class="finding-title">Finding 4: Emergent Reasoning Patterns and Challenges</h3>
-          <div class="expand-icon">-</div>
         </div>
         <div class="finding-content" id="finding-content-4">
           <p>Beyond quantitative measurements, we qualitatively analyzed how agents learn to reason:</p>
@@ -91,9 +87,8 @@
   .finding-header {
     padding: 1.2rem 1.5rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    cursor: pointer;
     color: white;
   }
 
@@ -110,16 +105,9 @@
     flex: 1;
   }
 
-  .expand-icon {
-    font-size: 1.5rem;
-    font-weight: bold;
-    transition: transform 0.3s ease;
-    margin-left: 1rem;
-  }
-
   .finding-content {
     padding: 1.5rem;
-    display: none;
+    display: block;
     line-height: 1.7;
     color: var(--text-secondary);
     background-color: rgba(255, 255, 255, 0.8);
@@ -128,16 +116,6 @@
   .finding-content p {
     margin: 0;
     font-size: 1.1rem;
-  }
-
-  .finding-content.active {
-    display: block;
-    animation: fadeIn 0.5s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
   }
 
   /* Add highlighting for key terms */
@@ -156,26 +134,3 @@
     margin-bottom: 0.5rem;
   }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    for (let i = 1; i <= 4; i++) {
-      const findingCard = document.getElementById(`finding-card-${i}`);
-      const findingContent = document.getElementById(`finding-content-${i}`);
-      const expandIcon = findingCard?.querySelector('.expand-icon');
-      if (findingCard && findingContent) {
-        findingContent.classList.remove('active');
-        if (expandIcon) expandIcon.textContent = '+';
-        const header = findingCard.querySelector('.finding-header');
-        if (header) {
-          header.addEventListener('click', (e) => {
-            findingContent.classList.toggle('active');
-            if (expandIcon) {
-              expandIcon.textContent = findingContent.classList.contains('active') ? '-' : '+';
-            }
-          });
-        }
-      }
-    }
-  });
-</script> 
