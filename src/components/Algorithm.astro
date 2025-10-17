@@ -53,8 +53,9 @@ const mathFormulas = {
       <div class="component-card pomdp-card" id="pomdp-card">
         <div class="component-header">
           <h3 class="component-title">Problem Formulation: VLM Agent Training under POMDP</h3>
+          <div class="expand-icon">-</div>
         </div>
-        <div class="component-content" id="pomdp-content">
+        <div class="component-content active" id="pomdp-content">
           <p>We frame multi-turn VLM agentic tasks as a Partially Observable Markov Decision Process (POMDP), represented by the tuple <span set:html={mathFormulas.pomdp} />, where <span set:html="\\(S\\)" /> denotes the set of environment states, and <span set:html="\\(O\\)" /> is the space of observations perceived by the agent.</p>
           
           <div class="interactive-pomdp-viz">
@@ -75,6 +76,10 @@ const mathFormulas = {
             </div>
           </div>
           
+          <div class="method-gif">
+            <img src="gifs/VAGEN-4-8.gif" alt="Animated overview of VAGEN method setup" loading="lazy" />
+          </div>
+          
           <p>Each observation <span set:html="\\(o_t \\in O\\)" /> is a partial view of the environment state <span set:html="\\(s_t \\in S\\)" />, given by the observation function <span set:html="\\(\\phi\\)" />. The agent's objective is to learn a policy <span set:html="\\(\\pi_\\theta\\)" /> that maximizes the expected cumulative discounted return <span set:html={mathFormulas.objective} />.</p>
           
           <p>In our setting, the policy <span set:html="\\(\\pi_\\theta\\)" /> is <strong>parameterized by a VLM</strong> that takes in <strong>visual images with their prompts as observations</strong>, and outputs <strong>language token sequences as actions</strong>.</p>
@@ -85,9 +90,14 @@ const mathFormulas = {
       <div class="component-card training-card" id="training-card">
         <div class="component-header">
           <h3 class="component-title">Multi-Turn Reinforcement Learning with Visual State Reasoning</h3>
+          <div class="expand-icon">-</div>
         </div>
-        <div class="component-content" id="training-content">
+        <div class="component-content active" id="training-content">
           <p>Our training algorithm optimizes multi-turn interactions to better address the demands of agentic tasks, with specifications to VLMs in multi-turn, trajectory-based optimization setting.</p>
+          
+          <div class="method-gif">
+            <img src="gifs/VAGEN-9-19.gif" alt="Policy optimization animation for multi-turn VAGEN training" loading="lazy" />
+          </div>
           
           <div class="training-phases">
             <div class="phase-card" id="rollout-phase">
@@ -117,21 +127,21 @@ const mathFormulas = {
                       <div class="code-snippet">
                         <code>&lt;think&gt;&lt;observation&gt;...&lt;/observation&gt;...&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
                       </div>
-                      <p>Learning: <span set:html="\\(z_t = \\langle s^b_t, a^b_t \\rangle\\)" />, learning to approximate <span set:html="\\(s^b_t \\rightarrow s_t\\)" /></p>
+                      <p>Learning: <span set:html="\\(z_t = \\langle \\hat{s}_t, a^b_t \\rangle\\)" />, learning to approximate <span set:html="\\(\\hat{s}_t \\rightarrow s_t\\)" /></p>
                     </div>
                     <div class="strategy-details" id="worldmodeling-content">
                       <p><strong>WorldModeling:</strong> Explicit future state prediction</p>
                       <div class="code-snippet">
                         <code>&lt;think&gt;...&lt;prediction&gt;...&lt;/prediction&gt;&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
                       </div>
-                      <p>Learning: <span set:html="\\(z_t = \\langle a^b_t, s^b_{t+1} \\rangle\\)" />, learning to approximate <span set:html="\\(s^b_{t+1} \\rightarrow s_{t+1}\\)" /></p>
+                      <p>Learning: <span set:html="\\(z_t = \\langle a^b_t, \\hat{s}_{t+1} \\rangle\\)" />, learning to approximate <span set:html="\\(\\hat{s}_{t+1} \\rightarrow s_{t+1}\\)" /></p>
                     </div>
                     <div class="strategy-details" id="combined-content">
                       <p><strong>WorldModeling:</strong> Combined current and future state reasoning</p>
                       <div class="code-snippet">
                         <code>&lt;think&gt;&lt;observation&gt;...&lt;/observation&gt;...&lt;prediction&gt;...&lt;/prediction&gt;&lt;/think&gt;&lt;answer&gt;...&lt;/answer&gt;</code>
                       </div>
-                      <p>Learning: <span set:html="\\(z_t = \\langle s^b_t, a^b_t, s^b_{t+1} \\rangle\\)" />, learning to approximate <span set:html="\\(s^b_t \\rightarrow s_t, s^b_{t+1} \\rightarrow s_{t+1}\\)" /></p>
+                      <p>Learning: <span set:html="\\(z_t = \\langle \\hat{s}_t, a^b_t, \\hat{s}_{t+1} \\rangle\\)" />, learning to approximate <span set:html="\\(\\hat{s}_t \\rightarrow s_t, \\hat{s}_{t+1} \\rightarrow s_{t+1}\\)" /></p>
                     </div>
                   </div>
                 </div>
@@ -144,7 +154,11 @@ const mathFormulas = {
                 <p>
                   We use a modified form of Generalized Advantage Estimation (GAE) that applies masking to exclude tokens generated by the environment (i.e., non-action tokens) from advantage estimation and loss computation. This ensures that only relevant tokens contribute to the learning signal.
                 </p>
-                <pre class="code-block" style="background: #f8fafc; color: #222; border-radius: 8px; padding: 1em; margin: 1em 0 0 0; overflow-x: auto; font-size: 0.98em;"><code>def compute_gae_advantage_return_with_loss_mask(token_level_rewards: torch.Tensor, values: torch.Tensor, 
+                <button class="code-toggle" data-target="advantage-code-block">
+                  <span class="toggle-icon">+</span>
+                  <span class="toggle-text">Show Code</span>
+                </button>
+                <pre id="advantage-code-block" class="code-block" style="background: #f8fafc; color: #222; border-radius: 8px; padding: 1em; margin: 1em 0 0 0; overflow-x: auto; font-size: 0.98em;"><code>def compute_gae_advantage_return_with_loss_mask(token_level_rewards: torch.Tensor, values: torch.Tensor, 
                                  loss_mask: torch.Tensor, gamma: float, lam: float):
     """Modified GAE calculation that handle multi-turn with loss mask
     Here we should also ensure that the trajectory score is given at the last valid token instead of last token
@@ -237,8 +251,12 @@ const mathFormulas = {
       <div class="component-card" id="improvement1-card">
         <div class="component-header">
           <h3 class="component-title">Boost #1: WorldModeling Reward</h3>
+          <div class="expand-icon">-</div>
         </div>
-        <div class="component-content" id="improvement1-content">
+        <div class="component-content active" id="improvement1-content">
+          <div class="method-gif">
+            <img src="gifs/VAGEN-20-26.gif" alt="WorldModeling reward pipeline animation" loading="lazy" />
+          </div>
           <p>We use LLM-as-Judge to reward the agent when its predicted or observed visual state matches the ground truth.</p>
           <div class="visual-reward-carousel" style="text-align:center; margin: 1.5em 0;">
             <img id="boost1-carousel-img" src="figures/1.png" alt="WorldModeling Reward Example" style="max-width: 800px; width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); margin-bottom: 0.5em; transition: opacity 0.3s;" />
@@ -284,14 +302,19 @@ const mathFormulas = {
       <div class="component-card" id="improvement2-card">
         <div class="component-header">
           <h3 class="component-title">Boost #2: Bi-Level GAE</h3>
+          <div class="expand-icon">-</div>
         </div>
-        <div class="component-content" id="improvement2-content">
+        <div class="component-content active" id="improvement2-content">
           <p>To address the limitation of only providing trajectory-level feedback, we propose Bi-Level GAE, which delivers fine-grained turn-level reward signals. This approach assigns rewards at the end of each action and introduces two discount factors: one for tokens within a turn, and one for transitions across turns.</p>
           <div class="diagram-placeholder">
             <img src="figures/vrRL-1.png" alt="Bi-Level GAE Diagram" style="max-width: 800px; width: 100%; margin: 1em auto; display: block; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
             <p style="color: #888; text-align: center; margin-top: 0.5em;">Bi-Level GAE framework illustration.</p>
           </div>
-          <pre class="code-block" style="background: #f8fafc; color: #222; border-radius: 8px; padding: 1em; margin: 1em 0 0 0; overflow-x: auto; font-size: 0.98em;"><code>def compute_bi_level_gae_advantage_return(
+          <button class="code-toggle" data-target="bilevel-code-block">
+            <span class="toggle-icon">+</span>
+            <span class="toggle-text">Show Code</span>
+          </button>
+          <pre id="bilevel-code-block" class="code-block" style="background: #f8fafc; color: #222; border-radius: 8px; padding: 1em; margin: 1em 0 0 0; overflow-x: auto; font-size: 0.98em;"><code>def compute_bi_level_gae_advantage_return(
         token_level_rewards: torch.Tensor,
         reward_mask: torch.Tensor,
         values: torch.Tensor, 
@@ -439,10 +462,10 @@ const mathFormulas = {
     color: white;
     padding: 1.5rem;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    cursor: default;
+    cursor: pointer;
   }
 
   .training-card .component-header {
@@ -455,11 +478,27 @@ const mathFormulas = {
     font-weight: 600;
   }
 
+  .expand-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+  }
+
   .component-content {
     padding: 2rem;
-    display: block;
+    display: none;
     color: var(--text-secondary);
     background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .component-content.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .interactive-pomdp-viz {
@@ -576,6 +615,18 @@ const mathFormulas = {
     margin-bottom: 0;
   }
 
+  .method-gif {
+    margin: 2rem auto;
+    max-width: 820px;
+    text-align: center;
+  }
+
+  .method-gif img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.12);
+  }
+
   .code-snippet {
     background-color: rgba(0, 0, 0, 0.05);
     border-radius: 6px;
@@ -592,6 +643,40 @@ const mathFormulas = {
     line-height: 1.5;
   }
 
+  .code-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(34, 197, 94, 0.12);
+    color: var(--accent-color);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    border-radius: 999px;
+    padding: 0.45rem 0.95rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.2s ease;
+  }
+
+  .code-toggle:hover {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: var(--accent-color);
+  }
+
+  .code-toggle .toggle-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .code-block {
+    display: none;
+  }
+
+  .code-block.expanded {
+    display: block;
+  }
+
   @media (max-width: 900px) {
     .algorithm-components {
       flex-direction: column;
@@ -604,3 +689,50 @@ const mathFormulas = {
     }
   }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#vagen .component-card').forEach((card) => {
+    const header = card.querySelector(':scope > .component-header');
+    const content = card.querySelector(':scope > .component-content');
+    const icon = header?.querySelector('.expand-icon');
+
+    if (header && content && icon) {
+      const updateIcon = () => {
+        icon.textContent = content.classList.contains('active') ? '-' : '+';
+      };
+
+      updateIcon();
+
+      header.addEventListener('click', () => {
+        content.classList.toggle('active');
+        updateIcon();
+      });
+    }
+  });
+
+  document.querySelectorAll('#vagen .code-toggle').forEach((toggle) => {
+    const targetId = toggle.getAttribute('data-target');
+    const codeBlock = targetId ? document.getElementById(targetId) : null;
+    const icon = toggle.querySelector('.toggle-icon');
+    const text = toggle.querySelector('.toggle-text');
+
+    if (!codeBlock || !icon || !text) {
+      return;
+    }
+
+    const refresh = () => {
+      const expanded = codeBlock.classList.contains('expanded');
+      icon.textContent = expanded ? '-' : '+';
+      text.textContent = expanded ? 'Hide Code' : 'Show Code';
+    };
+
+    refresh();
+
+    toggle.addEventListener('click', () => {
+      codeBlock.classList.toggle('expanded');
+      refresh();
+    });
+  });
+});
+</script>

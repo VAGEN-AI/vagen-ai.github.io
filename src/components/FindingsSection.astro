@@ -9,8 +9,9 @@
       <div class="finding-card" id="finding-card-1">
         <div class="finding-header">
           <h3 class="finding-title">Finding 1: Explicit Visual State Reasoning is Crucial for Multi-Turn VLM Agents</h3>
+          <div class="expand-icon">-</div>
         </div>
-        <div class="finding-content" id="finding-content-1">
+        <div class="finding-content active" id="finding-content-1">
           <p>Vanilla VLMs struggle with multi-turn agentic tasks requiring visual state understanding. Integrating explicit visual state reasoning steps—specifically <strong>StateEstimation</strong> and <strong>TransitionModeling</strong>—into the VLM's thinking process during RL training significantly enhances task performance. The combined WorldModeling strategy, in particular, demonstrates strong and stable performance, enabling a trained open-source VLM to outperform its un-trained counterpart and even surpass benchmarked proprietary models.</p>
         </div>
       </div>
@@ -18,8 +19,9 @@
       <div class="finding-card" id="finding-card-2">
         <div class="finding-header">
           <h3 class="finding-title">Finding 2: Optimal Visual State Representation is Task-Dependent</h3>
+          <div class="expand-icon">-</div>
         </div>
-        <div class="finding-content" id="finding-content-2">
+        <div class="finding-content active" id="finding-content-2">
           <p>The choice of representation for visual states during explicit reasoning significantly impacts performance:</p>
           <ul>
             <li><strong>Natural Language:</strong> Performs consistently well, especially when structured information must be inferred from raw visual input.</li>
@@ -32,8 +34,9 @@
       <div class="finding-card" id="finding-card-3">
         <div class="finding-header">
           <h3 class="finding-title">Finding 3: Visual Reasoning RL with Targeted Rewards and Bi-Level GAE Enhances Reasoning Quality and Task Success</h3>
+          <div class="expand-icon">-</div>
         </div>
-        <div class="finding-content" id="finding-content-3">
+        <div class="finding-content active" id="finding-content-3">
           <p>To specifically improve visual state reasoning, Visual Reasoning RL incorporates:</p>
           <ul>
             <li><strong>Turn-level WorldModeling Reward:</strong> An LLM-as-a-Judge assesses the accuracy of the VLM's explicit state descriptions and predictions, effectively supervising reasoning.</li>
@@ -46,8 +49,9 @@
       <div class="finding-card" id="finding-card-4">
         <div class="finding-header">
           <h3 class="finding-title">Finding 4: Emergent Reasoning Patterns and Challenges</h3>
+          <div class="expand-icon">-</div>
         </div>
-        <div class="finding-content" id="finding-content-4">
+        <div class="finding-content active" id="finding-content-4">
           <p>Beyond quantitative measurements, we qualitatively analyzed how agents learn to reason:</p>
           <ul>
             <li><strong>Reasoning Stability Varies by Task:</strong> While reasoning in tasks like Navigation and PrimitiveSkill (and often Sokoban) appears relatively normal and beneficial with explicit rewards, tasks like FrozenLake show more erratic reasoning patterns, potentially correlating with its lower performance and the difficulty of its visual state reasoning.</li>
@@ -87,8 +91,9 @@
   .finding-header {
     padding: 1.2rem 1.5rem;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
+    cursor: pointer;
     color: white;
   }
 
@@ -105,12 +110,29 @@
     flex: 1;
   }
 
+  .expand-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-left: 1rem;
+    transition: transform 0.3s ease;
+  }
+
   .finding-content {
     padding: 1.5rem;
-    display: block;
+    display: none;
     line-height: 1.7;
     color: var(--text-secondary);
     background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .finding-content.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .finding-content p {
@@ -134,3 +156,28 @@
     margin-bottom: 0.5rem;
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.finding-card').forEach((card) => {
+      const header = card.querySelector('.finding-header');
+      const content = card.querySelector('.finding-content');
+      const icon = card.querySelector('.expand-icon');
+
+      if (header && content && icon) {
+        const updateState = () => {
+          const isOpen = content.classList.contains('active');
+          content.style.display = isOpen ? 'block' : 'none';
+          icon.textContent = isOpen ? '-' : '+';
+        };
+
+        updateState();
+
+        header.addEventListener('click', () => {
+          content.classList.toggle('active');
+          updateState();
+        });
+      }
+    });
+  });
+</script>
