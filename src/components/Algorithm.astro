@@ -77,7 +77,10 @@ const mathFormulas = {
           </div>
           
           <div class="method-gif">
-            <img src="gifs/VAGEN-4-8.gif" alt="Animated overview of VAGEN method setup" loading="lazy" />
+            <video autoplay loop muted playsinline preload="auto" aria-label="Animated overview of VAGEN method setup">
+              <source src="videos/VAGEN-4-8.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
           
           <p>Each observation <span set:html="\\(o_t \\in O\\)" /> is a partial view of the environment state <span set:html="\\(s_t \\in S\\)" />, given by the observation function <span set:html="\\(\\phi\\)" />. The agent's objective is to learn a policy <span set:html="\\(\\pi_\\theta\\)" /> that maximizes the expected cumulative discounted return <span set:html={mathFormulas.objective} />.</p>
@@ -96,7 +99,10 @@ const mathFormulas = {
           <p>Our training algorithm optimizes multi-turn interactions to better address the demands of agentic tasks, with specifications to VLMs in multi-turn, trajectory-based optimization setting.</p>
           
           <div class="method-gif">
-            <img src="gifs/VAGEN-9-19.gif" alt="Policy optimization animation for multi-turn VAGEN training" loading="lazy" />
+            <video autoplay loop muted playsinline preload="auto" aria-label="Policy optimization animation for multi-turn VAGEN training">
+              <source src="videos/VAGEN-9-19.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
           
           <div class="training-phases">
@@ -255,7 +261,10 @@ const mathFormulas = {
         </div>
         <div class="component-content active" id="improvement1-content">
           <div class="method-gif">
-            <img src="gifs/VAGEN-20-26.gif" alt="WorldModeling reward pipeline animation" loading="lazy" />
+            <video autoplay loop muted playsinline preload="auto" aria-label="WorldModeling reward pipeline animation">
+              <source src="videos/VAGEN-20-26.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
           <p>We use LLM-as-Judge to reward the agent when its predicted or observed visual state matches the ground truth.</p>
           <!--
@@ -623,7 +632,8 @@ const mathFormulas = {
     text-align: center;
   }
 
-  .method-gif img {
+  .method-gif img,
+  .method-gif video {
     width: 100%;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(34, 197, 94, 0.12);
