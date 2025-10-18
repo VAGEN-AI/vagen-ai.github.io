@@ -52,7 +52,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: site              # ✅ 改名，避免与别处的 "github-pages" 冲突
+          name: vagen_site              
           path: ./_site
           retention-days: 1
           if-no-files-found: error
@@ -61,4 +61,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: site     # ✅ 指定上面那个工件名
+          artifact_name: vagen_site 
