@@ -10,12 +10,13 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,42 +24,30 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'   
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm run build    
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5  # 小升级，v5
+        uses: actions/configure-pages@v5
 
-      - name: Prepare artifact
-        run: |
-          # Create a fresh directory for the artifact
-          rm -rf ./_site
-          mkdir -p ./_site
-          # Copy build output, resolving any symlinks and excluding node_modules
-          cp -rL dist/* ./_site/ || true
-          # Remove any remaining symlinks and problematic files
-          find ./_site -type l -delete
-          find ./_site -type p -delete
-          # Remove node_modules if it was copied
-          rm -rf ./_site/node_modules
-          # Ensure all files are regular files
-          find ./_site -type f -exec cp --remove-destination {} {}.tmp \; -exec mv {}.tmp {} \;
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: vagen_site              
-          path: ./_site
-          retention-days: 1
-          if-no-files-found: error
+          path: ./dist         
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          artifact_name: vagen_site 
