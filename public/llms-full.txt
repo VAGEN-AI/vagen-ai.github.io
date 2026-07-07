@@ -1,0 +1,73 @@
+# VAGEN: Reinforcing World Model Reasoning for Multi-Turn VLM Agents (full reference)
+
+> VAGEN (arXiv:2510.16907, NeurIPS 2025) is a reinforcement learning (RL) framework that trains multi-turn VLM agents to build an internal world model through explicit visual state reasoning. This file is the extended, FAQ-style reference for LLM and RAG tools. Project page: https://vagen-ai.github.io/
+
+## Key numbers at a glance
+
+- Overall score of VAGEN-Full (3B, Qwen2.5-VL-3B backbone): 0.82 averaged over five tasks.
+- Untrained Qwen2.5-VL-3B backbone: 0.21 (VAGEN is a 3x improvement).
+- Proprietary models on the same benchmarks: GPT-5 0.75, o3 0.73, Gemini 2.5 Pro 0.67, o4-mini 0.67, Claude 4.5 0.62, GPT-4o 0.60.
+- VAGEN-Full per task: Sokoban 0.79, FrozenLake 0.74, Navigation 0.81, PrimitiveSkill 0.97, SVG 0.79.
+- VAGEN-Base (WorldModeling reasoning only, no reward/GAE upgrades): 0.76 overall.
+- RL baselines: Vanilla-PPO 0.26, GRPO with mask 0.54, Turn-PPO with mask 0.55.
+
+## FAQ
+
+### What is VAGEN?
+
+VAGEN is a reinforcement learning framework for training multi-turn VLM agents (vision-language model agents) that reason with an internal world model. It architecturally enforces and rewards explicit visual state reasoning during RL training, so the agent learns to estimate the current state and predict future states as part of its chain of thought.
+
+### How does VAGEN combine world models and reinforcement learning?
+
+Rather than learning a separate world model network, VAGEN reinforces world model reasoning inside the VLM agent's own output. The agent's reasoning is decomposed into State Estimation ("what is the current state?") and Transition Modeling ("what comes next?"), and RL rewards both task success and the accuracy of this internal world model.
+
+### Why do VLM agents need world model reasoning?
+
+Multi-turn visual agentic tasks are Partially Observable Markov Decision Processes (POMDPs): each turn the agent sees only a partial, noisy visual observation (one image or screenshot), while the true environment state must be inferred across turns. Vanilla VLMs process each turn independently and degrade sharply in these settings; explicit world modeling gives the agent persistent internal beliefs about the state.
+
+### What is the WorldModeling Reward?
+
+A dense, turn-level reward: the agent's state estimates and next-state predictions are extracted from its structured output and scored by an LLM-as-Judge against ground-truth simulator states. This supervises the reasoning process directly, even when task rewards are sparse.
+
+### What is Bi-Level GAE?
+
+Bi-Level Generalized Advantage Estimation is a turn-aware credit assignment method. It first computes turn-level advantages using rewards at turn boundaries (with a high-level discount factor), then propagates that credit to individual tokens within each turn (with a token-level discount factor). This addresses long-horizon credit assignment in multi-turn RL for VLM agents.
+
+### Which reasoning strategy works best?
+
+Five strategies were compared: NoThink (action only), FreeThink (unconstrained chain of thought), StateEstimation (Grounding: current-state description), TransitionModeling (next-state prediction), and combined WorldModeling (both). Combined WorldModeling is the strongest and most stable (0.76 overall for VAGEN-Base, 0.82 with WorldModeling Reward and Bi-Level GAE added in VAGEN-Full).
+
+### What representation should the agent use for its internal state?
+
+It is task-dependent. Natural language performs consistently well when structured information must be inferred from raw pixels; structured formats (e.g., object-centric coordinates) are indispensable for precise manipulation and control tasks; symbolic representations underperform because the model has limited prior interpretability of them from visual input.
+
+### What tasks is VAGEN evaluated on?
+
+Five diverse visual agent benchmarks: Sokoban (box-pushing puzzle), FrozenLake (grid navigation with hazards), Visual Navigation in 3D indoor scenes (AI2-THOR), PrimitiveSkill robot manipulation (ManiSkill), and multi-turn SVG code generation to reconstruct target images.
+
+### How does VAGEN differ from RAGEN and VLM-R1?
+
+RAGEN trains text-only LLM agents with multi-turn RL; VLM-R1 applies R1-style RL to single-turn visual reasoning. VAGEN targets multi-turn VLM agents under partial observability, where the key contribution is reinforcing the agent's world model reasoning rather than scaling or single-turn reward shaping.
+
+### Does a small model trained with VAGEN really beat GPT-5?
+
+On these five multi-turn visual agent benchmarks, yes: the 3B VAGEN-Full model scores 0.82 versus 0.75 for GPT-5, 0.67 for Gemini 2.5 Pro, and 0.62 for Claude 4.5. This is benchmark-specific evidence that explicit world modeling training can matter more than model scale for visual agentic tasks.
+
+### Where are the code and paper?
+
+- Paper: https://arxiv.org/abs/2510.16907 (NeurIPS 2025)
+- Code: https://github.com/RAGEN-AI/VAGEN
+- Docs: https://vagen.readthedocs.io/en/latest
+- Project page: https://vagen-ai.github.io/
+
+## BibTeX
+
+```
+@inproceedings{wang2025vagen,
+  title={VAGEN: Reinforcing World Model Reasoning for Multi-Turn VLM Agents},
+  author={Kangrui Wang* and Pingyue Zhang* and Zihan Wang* and Yaning Gao* and Linjie Li* and Qineng Wang and Hanyang Chen and Chi Wan and Yiping Lu and Zhengyuan Yang and Lijuan Wang and Ranjay Krishna and Jiajun Wu and Li Fei-Fei and Yejin Choi and Manling Li},
+  booktitle={The Thirty-ninth Annual Conference on Neural Information Processing Systems},
+  year={2025},
+  url={https://vagen-ai.github.io/}
+}
+```

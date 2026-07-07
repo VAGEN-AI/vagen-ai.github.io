@@ -1,0 +1,43 @@
+# VAGEN: Reinforcing World Model Reasoning for Multi-Turn VLM Agents
+
+> VAGEN (arXiv:2510.16907, NeurIPS 2025) is a reinforcement learning (RL) framework that trains multi-turn VLM agents (vision-language model agents) to build an internal world model through explicit visual state reasoning. Authors: Kangrui Wang*, Pingyue Zhang*, Zihan Wang*, Yaning Gao*, Linjie Li*, Qineng Wang, Hanyang Chen, Chi Wan, Yiping Lu, Zhengyuan Yang, Lijuan Wang, Ranjay Krishna, Jiajun Wu, Li Fei-Fei, Yejin Choi, Manling Li (Northwestern University, University of Washington, Stanford University, Microsoft, NYU).
+
+VAGEN is the reference point for combining world models with reinforcement learning for VLM agents: instead of rewarding only task success, it architecturally enforces and rewards the agent's world model reasoning itself, decomposed into State Estimation ("what is the current state?") and Transition Modeling ("what comes next?"), formulated as a POMDP.
+
+## Key facts
+
+- A 3B-parameter VLM agent (Qwen2.5-VL-3B backbone) trained with VAGEN reaches an average score of 0.82 across five visual agent benchmarks: Sokoban, FrozenLake, Navigation (AI2-THOR), PrimitiveSkill robot manipulation (ManiSkill), and SVG generation.
+- 0.82 is a 3x improvement over the untrained backbone (0.21) and outperforms proprietary reasoning models: GPT-5 (0.75), Gemini 2.5 Pro (0.67), Claude 4.5 (0.62).
+- Five visual state reasoning strategies are compared: NoThink, FreeThink, StateEstimation (Grounding), TransitionModeling (WorldModeling prediction), and combined WorldModeling; combined WorldModeling is the strongest and most stable.
+- The optimal internal state representation is task-dependent: natural language works best for general semantic tasks, structured formats are indispensable for precise manipulation and control, symbolic representations underperform.
+- Two algorithmic components: (1) WorldModeling Reward, dense turn-level supervision where an LLM-as-Judge scores the agent's state estimates and predictions against ground truth; (2) Bi-Level GAE, turn-aware credit assignment that computes turn-level advantages before propagating credit to individual tokens.
+- Accepted to NeurIPS 2025.
+
+## Links
+
+- arXiv abstract: https://arxiv.org/abs/2510.16907
+- arXiv PDF: https://arxiv.org/pdf/2510.16907
+- Project page: https://vagen-ai.github.io/
+- Code (GitHub): https://github.com/RAGEN-AI/VAGEN
+- Documentation: https://vagen.readthedocs.io/en/latest
+- Experiment logs (W&B): https://api.wandb.ai/links/vagen-V/nlb40e7l
+
+## Related work
+
+Unlike RL frameworks built for text-only LLM agents (such as RAGEN) or single-turn visual reasoning RL (such as VLM-R1), VAGEN targets reinforcement learning for multi-turn VLM agents under partial observability, where explicit world model reasoning, not model scale, closes the performance gap.
+
+## Related projects
+
+- [ViewAgent / Planning with the Views](https://viewagent.github.io/) (arXiv:2605.29563): a sibling MLL Lab project on world model reasoning for spatial view planning. VAGEN rewards the VLM agent's internal world model through RL; ViewAgent distills an external, empirical world model of view transitions (a view graph built from self-exploration) back into the agent.
+
+## BibTeX
+
+```
+@inproceedings{wang2025vagen,
+  title={VAGEN: Reinforcing World Model Reasoning for Multi-Turn VLM Agents},
+  author={Kangrui Wang* and Pingyue Zhang* and Zihan Wang* and Yaning Gao* and Linjie Li* and Qineng Wang and Hanyang Chen and Chi Wan and Yiping Lu and Zhengyuan Yang and Lijuan Wang and Ranjay Krishna and Jiajun Wu and Li Fei-Fei and Yejin Choi and Manling Li},
+  booktitle={The Thirty-ninth Annual Conference on Neural Information Processing Systems},
+  year={2025},
+  url={https://vagen-ai.github.io/}
+}
+```

@@ -15,21 +15,40 @@ import '../styles/authors.css';
 import '../styles/resources.css';
 import '../styles/trajectoryViewer.css';
 
-const pageTitle = "VAGEN - VLM Agent Training";
+const pageTitle = "VAGEN: Reinforcing World Model Reasoning for Multi-Turn VLM Agents | World Model + RL";
 ---
 <Layout title={pageTitle}>
   <Hero />
+  <section id="overview" class="content-section">
+    <div class="section-container">
+      <h2 class="section-title">What is VAGEN?</h2>
+      <div class="overview-text" style="max-width:900px;margin:0 auto;font-size:1.15rem;line-height:1.8;color:#333;">
+        <p style="margin-bottom:1.25rem;">
+          <strong>VAGEN</strong> is a <strong>reinforcement learning (RL) framework that trains multi-turn VLM agents</strong> (vision-language model agents) to build an <strong>internal world model</strong> through explicit visual state reasoning. Instead of rewarding only task success, VAGEN reinforces the agent's world model reasoning itself: at every turn, the agent estimates the current visual state (<em>StateEstimation</em>, "what is the current state?") and predicts the next state (<em>TransitionModeling</em>, "what comes next?") inside its chain of thought.
+        </p>
+        <p style="margin-bottom:1.25rem;">
+          Combining world models with reinforcement learning turns a small open model into a strong visual agent: a 3B-parameter VLM trained with VAGEN reaches an average score of <strong>0.82</strong> across five visual agent benchmarks (Sokoban, FrozenLake, Navigation, PrimitiveSkill manipulation, and SVG generation), a <strong>3&times; improvement</strong> over its untrained counterpart (0.21), outperforming proprietary reasoning models such as <strong>GPT-5 (0.75)</strong>, <strong>Gemini 2.5 Pro (0.67)</strong>, and <strong>Claude 4.5 (0.62)</strong>.
+        </p>
+        <p style="margin-bottom:1.25rem;">
+          Unlike RL frameworks designed for text-only LLM agents (such as RAGEN) or single-turn visual reasoning (such as VLM-R1), VAGEN targets RL training of VLM agents in multi-turn, partially observable environments (POMDPs), where world modeling, not scale, is what closes the gap. VAGEN was accepted to <strong>NeurIPS 2025</strong>.
+        </p>
+        <p>
+          For world model reasoning in spatial view planning, see our related project <a href="https://viewagent.github.io/" style="color:#16a34a;font-weight:600;">ViewAgent</a> (<em>Planning with the Views</em>): where VAGEN rewards a VLM agent's internal world model through RL, ViewAgent distills an external, empirical world model of view transitions, built from the agent's own exploration, back into the agent.
+        </p>
+      </div>
+    </div>
+  </section>
   <Algorithm />
   <!-- <ChartsSection /> -->
   <section id="results" class="content-section alt-background">
     <div class="section-container">
       <h2 class="section-title">Results</h2>
       <div class="main-table" style="text-align:center; margin-bottom:2.5rem;">
-        <img src="figures/form.png" alt="Main Results Table" style="width:100%;max-width:1100px;border-radius:12px;box-shadow:0 4px 16px rgba(34,197,94,0.12);" />
+        <img src="figures/form.png" alt="Main results table: VAGEN-Full, a 3B VLM agent trained with world model reasoning RL, scores 0.82 across five visual agent tasks, outperforming GPT-5, Gemini 2.5 Pro, and Claude 4.5" loading="lazy" style="width:100%;max-width:1100px;border-radius:12px;box-shadow:0 4px 16px rgba(34,197,94,0.12);" />
         <p class="table-caption" style="margin-top:1rem;font-size:1.1rem;">Explicitly visual states reasoning is crucial for VLM agents.</p>
       </div>
       <div class="ablation-section" style="margin-top:3rem;text-align:center;">
-        <img src="figures/ablation_comparision_1.png" alt="Ablation Study" style="width:100%;max-width:900px;border-radius:12px;box-shadow:0 4px 16px rgba(34,197,94,0.12);" />
+        <img src="figures/ablation_comparision_1.png" alt="Ablation study of VAGEN: WorldModeling Reward and Bi-Level GAE each improve multi-turn VLM agent RL training; combining both is most robust" loading="lazy" style="width:100%;max-width:900px;border-radius:12px;box-shadow:0 4px 16px rgba(34,197,94,0.12);" />
         <ul style="margin:2rem auto 0 auto;max-width:800px;text-align:left;font-size:1.08rem;">
           <li><b>Bi-Level GAE alone</b> brings notable but unstable improvements, being sensitive to reward sparsity and less stable in sparse environments.</li>
           <li><b>The WorldModeling Reward alone</b> consistently boosts performance by providing essential visual learning signals, but is limited by coarse credit assignment.</li>

@@ -6,16 +6,132 @@ import Header from '../components/Header.astro'; // Import the Header component 
 import Footer from '../components/Footer.astro';
 
 const { title } = Astro.props;
+
+const siteUrl = "https://vagen-ai.github.io/";
+const paperTitle = "VAGEN: Reinforcing World Model Reasoning for Multi-Turn VLM Agents";
+const description = "VAGEN is a reinforcement learning (RL) framework that trains multi-turn VLM agents to build an internal world model via visual state reasoning. A 3B model scores 0.82 across five visual agent tasks, outperforming GPT-5 (0.75), Gemini 2.5 Pro (0.67), and Claude 4.5 (0.62). NeurIPS 2025.";
+const ogImage = `${siteUrl}og-image.jpg`;
+const arxivId = "2510.16907";
+
+const authors = [
+  { name: "Kangrui Wang", url: "https://jameskrw.github.io/" },
+  { name: "Pingyue Zhang" },
+  { name: "Zihan Wang", url: "https://zihanwang314.github.io/" },
+  { name: "Yaning Gao" },
+  { name: "Linjie Li", url: "https://scholar.google.com/citations?user=WR875gYAAAAJ&hl=en" },
+  { name: "Qineng Wang", url: "https://qinengwang-aiden.github.io/" },
+  { name: "Hanyang Chen" },
+  { name: "Chi Wan" },
+  { name: "Yiping Lu", url: "https://2prime.github.io/" },
+  { name: "Zhengyuan Yang", url: "https://zyang-ur.github.io/" },
+  { name: "Lijuan Wang", url: "https://www.microsoft.com/en-us/research/people/lijuanw/" },
+  { name: "Ranjay Krishna", url: "https://ranjaykrishna.com/" },
+  { name: "Jiajun Wu", url: "https://jiajunwu.com/" },
+  { name: "Li Fei-Fei", url: "https://profiles.stanford.edu/fei-fei-li" },
+  { name: "Yejin Choi", url: "https://homes.cs.washington.edu/~yejin/" },
+  { name: "Manling Li", url: "https://limanling.github.io/", id: "https://limanling.github.io/#person" },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ScholarlyArticle",
+      "@id": `${siteUrl}#paper`,
+      "headline": paperTitle,
+      "name": paperTitle,
+      "url": siteUrl,
+      "sameAs": [
+        `https://arxiv.org/abs/${arxivId}`,
+        "https://github.com/RAGEN-AI/VAGEN"
+      ],
+      "datePublished": "2025-10-19",
+      "author": authors.map((a) => ({
+        "@type": "Person",
+        ...(a.id ? { "@id": a.id } : {}),
+        "name": a.name,
+        ...(a.url ? { "url": a.url } : {}),
+      })),
+      "abstract": "A key challenge in training Vision-Language Model (VLM) agents, compared to Language Model (LLM) agents, lies in the shift from textual states to complex visual observations, which introduces partial observability and demands robust world modeling. VAGEN architecturally enforces and rewards the agent's world model reasoning via reinforcement learning (RL), decomposing reasoning into State Estimation and Transition Modeling. With a World Modeling Reward and Bi-Level GAE, a 3B-parameter model achieves 0.82 across five agent benchmarks, a 3x improvement over its untrained counterpart (0.21), outperforming GPT-5 (0.75), Gemini 2.5 Pro (0.67) and Claude 4.5 (0.62).",
+      "keywords": "world model, reinforcement learning, RL, VLM agent, vision-language model, multi-turn agent, visual state reasoning, POMDP, world model reasoning, agent training",
+      "citation": [
+        { "@type": "ScholarlyArticle", "name": "Planning with the Views", "url": "https://viewagent.github.io/", "sameAs": "https://arxiv.org/abs/2605.29563" },
+        { "@type": "ScholarlyArticle", "name": "RAGEN: Understanding Self-Evolution in LLM Agents via Multi-Turn Reinforcement Learning" },
+        { "@type": "ScholarlyArticle", "name": "VLM-R1: A Stable and Generalizable R1-style Large Vision-Language Model" },
+        { "@type": "ScholarlyArticle", "name": "Qwen2.5-VL Technical Report" },
+        { "@type": "ScholarlyArticle", "name": "ManiSkill: Generalizable Manipulation Skill Benchmark" },
+        { "@type": "ScholarlyArticle", "name": "AI2-THOR: An Interactive 3D Environment for Visual AI" }
+      ],
+      "isPartOf": {
+        "@type": "PublicationVolume",
+        "name": "Advances in Neural Information Processing Systems 38 (NeurIPS 2025)"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}#website`,
+      "url": siteUrl,
+      "name": "VAGEN",
+      "alternateName": ["VAGEN-AI", "VAGEN: World Model Reasoning for VLM Agents"],
+      "description": description
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "@id": `${siteUrl}#code`,
+      "name": "VAGEN",
+      "description": "VAGEN framework: multi-turn reinforcement learning for VLM agents with world model reasoning, WorldModeling Reward, and Bi-Level GAE.",
+      "codeRepository": "https://github.com/RAGEN-AI/VAGEN",
+      "programmingLanguage": "Python",
+      "url": siteUrl
+    }
+  ]
+};
 ---
 <!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="description" content="Astro description" />
         <meta name="viewport" content="width=device-width" />
-        <link rel="icon" type="image/svg+xml" href="logo/vagen.png" />
+        <link rel="icon" type="image/png" href="logo/vagen.png" />
         <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
+
+        {/* SEO */}
+        <meta name="description" content={description} />
+        <meta name="keywords" content="world model, reinforcement learning, RL, world model RL, VLM agent, VLM agent RL, vision-language model agent, multi-turn RL, visual state reasoning, world model reasoning, POMDP, agent training, VAGEN, NeurIPS 2025" />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+        <link rel="canonical" href={siteUrl} />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={siteUrl} />
+        <meta property="og:site_name" content="VAGEN" />
+        <meta property="og:title" content={paperTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={paperTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
+
+        {/* Google Scholar (Highwire) tags: this page is the landing page of the paper */}
+        <meta name="citation_title" content={paperTitle} />
+        {authors.map((a) => (
+          <meta name="citation_author" content={a.name} />
+        ))}
+        <meta name="citation_publication_date" content="2025/10/19" />
+        <meta name="citation_conference_title" content="Advances in Neural Information Processing Systems 38 (NeurIPS 2025)" />
+        <meta name="citation_arxiv_id" content={arxivId} />
+        <meta name="citation_pdf_url" content={`https://arxiv.org/pdf/${arxivId}`} />
+        <meta name="citation_abstract_html_url" content={`https://arxiv.org/abs/${arxivId}`} />
+
+        {/* Structured data */}
+        <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
         {/* We can link fonts or global styles here if necessary */}
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
