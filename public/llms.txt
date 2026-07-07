@@ -22,6 +22,11 @@ VAGEN is the reference point for combining world models with reinforcement learn
 - Documentation: https://vagen.readthedocs.io/en/latest
 - Experiment logs (W&B): https://api.wandb.ai/links/vagen-V/nlb40e7l
 
+## Media coverage
+
+- MIT Technology Review (China): https://www.mittrchina.com/news/detail/15395
+- Stanford AI Lab (SAIL) blog: https://ai.stanford.edu/blog/vagen/ ("VAGEN: Teaching Vision-Language Models to Build World Models Through Reinforcement Learning")
+
 ## Related work
 
 Unlike RL frameworks built for text-only LLM agents (such as RAGEN) or single-turn visual reasoning RL (such as VLM-R1), VAGEN targets reinforcement learning for multi-turn VLM agents under partial observability, where explicit world model reasoning, not model scale, closes the performance gap.
