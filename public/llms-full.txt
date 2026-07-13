@@ -56,7 +56,7 @@ On these five multi-turn visual agent benchmarks, yes: the 3B VAGEN-Full model s
 ### Where are the code and paper?
 
 - Paper: https://arxiv.org/abs/2510.16907 (NeurIPS 2025)
-- Code: https://github.com/RAGEN-AI/VAGEN
+- Code: https://github.com/mll-lab-nu/VAGEN
 - Docs: https://vagen.readthedocs.io/en/latest
 - Project page: https://vagen-ai.github.io/
 

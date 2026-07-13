@@ -18,7 +18,7 @@ VAGEN is the reference point for combining world models with reinforcement learn
 - arXiv abstract: https://arxiv.org/abs/2510.16907
 - arXiv PDF: https://arxiv.org/pdf/2510.16907
 - Project page: https://vagen-ai.github.io/
-- Code (GitHub): https://github.com/RAGEN-AI/VAGEN
+- Code (GitHub): https://github.com/mll-lab-nu/VAGEN
 - Documentation: https://vagen.readthedocs.io/en/latest
 - Experiment logs (W&B): https://api.wandb.ai/links/vagen-V/nlb40e7l
 

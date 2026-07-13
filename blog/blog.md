@@ -321,5 +321,5 @@ Our VAGEN framework significantly enhances task performance and visual reasoning
 ## Resources
 
 - **Paper**: [arXiv](https://arxiv.org/abs/2510.16907)
-- **Code**: [GitHub](https://github.com/RAGEN-AI/VAGEN)
+- **Code**: [GitHub](https://github.com/mll-lab-nu/VAGEN)
 - **Project Page**: [https://vagen-ai.github.io/](https://vagen-ai.github.io/)
