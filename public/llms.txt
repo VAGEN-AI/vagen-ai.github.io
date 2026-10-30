@@ -1,26 +1,30 @@
 # VAGEN: Reinforcing World Model Reasoning for Multi-Turn VLM Agents
 
-> VAGEN (arXiv:2510.16907, NeurIPS 2025) is a reinforcement learning (RL) framework that trains multi-turn VLM agents (vision-language model agents) to build an internal world model through explicit visual state reasoning. Authors: Kangrui Wang*, Pingyue Zhang*, Zihan Wang*, Yaning Gao*, Linjie Li*, Qineng Wang, Hanyang Chen, Chi Wan, Yiping Lu, Zhengyuan Yang, Lijuan Wang, Ranjay Krishna, Jiajun Wu, Li Fei-Fei, Yejin Choi, Manling Li (Northwestern University, University of Washington, Stanford University, Microsoft, NYU).
+> VAGEN (arXiv:2510.16907, NeurIPS 2025) is a multi-turn reinforcement learning (RL) framework that trains VLM agents (vision-language model agents) to reason with an internal world model through explicit visual state reasoning. Authors: Kangrui Wang*, Pingyue Zhang*, Zihan Wang*, Yaning Gao*, Linjie Li*, Qineng Wang, Hanyang Chen, Chi Wan, Yiping Lu, Zhengyuan Yang, Lijuan Wang, Ranjay Krishna, Jiajun Wu, Li Fei-Fei, Yejin Choi, Manling Li (* equal contribution; Manling Li is the corresponding author). Affiliations: Northwestern University, University of Washington, Stanford University, Microsoft, University of Wisconsin-Madison, UIUC.
 
-VAGEN is the reference point for combining world models with reinforcement learning for VLM agents: instead of rewarding only task success, it architecturally enforces and rewards the agent's world model reasoning itself, decomposed into State Estimation ("what is the current state?") and Transition Modeling ("what comes next?"), formulated as a POMDP.
+VAGEN combines world models with agentic reinforcement learning for VLM agents: instead of rewarding only task success, it architecturally enforces and rewards the agent's world model reasoning itself. The problem is formulated as a Partially Observable Markov Decision Process (POMDP), and the agent's reasoning is decomposed into State Estimation ("what is the current state?") and Transition Modeling ("what is next?").
 
 ## Key facts
 
-- A 3B-parameter VLM agent (Qwen2.5-VL-3B backbone) trained with VAGEN reaches an average score of 0.82 across five visual agent benchmarks: Sokoban, FrozenLake, Navigation (AI2-THOR), PrimitiveSkill robot manipulation (ManiSkill), and SVG generation.
-- 0.82 is a 3x improvement over the untrained backbone (0.21) and outperforms proprietary reasoning models: GPT-5 (0.75), Gemini 2.5 Pro (0.67), Claude 4.5 (0.62).
-- Five visual state reasoning strategies are compared: NoThink, FreeThink, StateEstimation (Grounding), TransitionModeling (WorldModeling prediction), and combined WorldModeling; combined WorldModeling is the strongest and most stable.
-- The optimal internal state representation is task-dependent: natural language works best for general semantic tasks, structured formats are indispensable for precise manipulation and control, symbolic representations underperform.
-- Two algorithmic components: (1) WorldModeling Reward, dense turn-level supervision where an LLM-as-Judge scores the agent's state estimates and predictions against ground truth; (2) Bi-Level GAE, turn-aware credit assignment that computes turn-level advantages before propagating credit to individual tokens.
+- A 3B-parameter VLM agent (Qwen2.5-VL-3B backbone) trained with VAGEN-Full reaches an overall score of 0.82 across five visual agent tasks: Sokoban, FrozenLake, Navigation (3D embodied navigation), PrimitiveSkill (robot object manipulation), and SVG Reconstruction.
+- The untrained Qwen2.5-VL-3B scores 0.21 on the same tasks (an absolute gain of 0.61).
+- The paper's abstract compares this with proprietary reasoning models: GPT-5 (0.75), Gemini 2.5 Pro (0.67) and Claude 4.5 (0.62). Table 2 of the paper lists Claude 4.5 Sonnet at 0.64.
+- Five reasoning strategies are compared: NoThink, FreeThink, StateEstimation, TransitionModeling, and WorldModeling (StateEstimation plus TransitionModeling). With RL alone (VAGEN-Base), WorldModeling scores 0.76 overall, versus 0.67 for FreeThink and 0.28 for NoThink.
+- The best internal state representation is task-dependent: natural language works best on Sokoban (0.61) and FrozenLake (0.71), while a structured format is slightly better on PrimitiveSkill manipulation (0.94 vs 0.91).
+- Two algorithmic components make up VAGEN-Full: (1) the WorldModeling Reward, a dense turn-level reward in which an LLM-as-a-Judge compares the agent's <observation> and <prediction> reasoning with ground-truth states; (2) Bi-Level GAE, turn-aware credit assignment that computes turn-level advantages first and then token-level advantages within each turn.
+- Policy optimization uses PPO with observation tokens masked out of the loss. RL baselines with the same backbone: Vanilla-PPO 0.26, GRPO with mask 0.54, Turn-PPO with mask 0.55.
 - Accepted to NeurIPS 2025.
 
 ## Links
 
 - arXiv abstract: https://arxiv.org/abs/2510.16907
 - arXiv PDF: https://arxiv.org/pdf/2510.16907
+- Hugging Face paper page: https://huggingface.co/papers/2510.16907
 - Project page: https://vagen-ai.github.io/
-- Code (GitHub): https://github.com/mll-lab-nu/VAGEN
+- Code (GitHub, MIT License): https://github.com/mll-lab-nu/VAGEN
 - Documentation: https://vagen.readthedocs.io/en/latest
 - Experiment logs (W&B): https://api.wandb.ai/links/vagen-V/nlb40e7l
+- Lab: MLL Lab, Northwestern University, https://www.mll.lab.northwestern.edu/
 
 ## Media coverage
 
@@ -29,11 +33,37 @@ VAGEN is the reference point for combining world models with reinforcement learn
 
 ## Related work
 
-Unlike RL frameworks built for text-only LLM agents (such as RAGEN) or single-turn visual reasoning RL (such as VLM-R1), VAGEN targets reinforcement learning for multi-turn VLM agents under partial observability, where explicit world model reasoning, not model scale, closes the performance gap.
+Unlike RL frameworks built for text-based LLM agents (such as RAGEN) or single-turn visual reasoning RL (such as VLM-R1), VAGEN targets reinforcement learning for multi-turn VLM agents under partial observability, where the agent must reason explicitly about visual states and how they change.
 
-## Related projects
+## Common questions
 
-- [ViewAgent / Planning with the Views](https://viewagent.github.io/) (arXiv:2605.29563): a sibling MLL Lab project on world model reasoning for spatial view planning. VAGEN rewards the VLM agent's internal world model through RL; ViewAgent distills an external, empirical world model of view transitions (a view graph built from self-exploration) back into the agent.
+### What is world model reasoning in VAGEN?
+
+It is the agent's own reasoning text about the environment, not a separate world model network. Before each action the VLM agent writes StateEstimation in <observation> tokens and TransitionModeling in <prediction> tokens; together these form WorldModeling. RL rewards this reasoning through the WorldModeling Reward.
+
+### Is VAGEN agentic reinforcement learning (agent RL)?
+
+Yes. VAGEN trains agents through multi-turn interaction with environments, optimizing the policy with PPO and assigning credit across turns and tokens with Bi-Level GAE.
+
+### Is VAGEN RL for vision?
+
+Yes. It is reinforcement learning for vision-language models acting as agents: every observation is an image, so the agent must estimate the visual state and predict how it will change.
+
+### What are multi-turn VLM agents?
+
+VLM agents that act over many turns, receiving a new visual observation after each action. VAGEN treats this as a POMDP, because a single image only partly reveals the true state.
+
+### How does VAGEN relate to RAGEN and RAGEN-2?
+
+RAGEN (arXiv:2504.20073) studies multi-turn RL for text-based LLM agents. VAGEN extends agentic RL to visual observations and adds world model reasoning. RAGEN-2 ("RAGEN-2: Reasoning Collapse in Agentic RL", arXiv:2604.06268, https://ragen-ai.github.io/) is a later MLL Lab paper on template collapse in agentic RL, where reasoning looks diverse but does not depend on the input.
+
+### How does VAGEN relate to ViewAgent?
+
+ViewAgent ("Planning with the Views", arXiv:2605.29563, https://viewagent.github.io/) is a later MLL Lab project on view planning with multi-turn VLM agents in real ScanNet scenes. VAGEN rewards the VLM agent's internal world model reasoning through RL; ViewAgent builds a view-planning environment and benchmark (ViewSuite) with full 6-DoF camera control.
+
+### How does VAGEN relate to Embodied First Exam?
+
+Embodied First Exam (EFE, https://www.embodied-first-exam.ai/) is a later MLL Lab release, a benchmark of frozen robot tasks that coding agents answer with programs. It is a website, code repository and report, not an arXiv paper. VAGEN trains VLM agents with RL; EFE evaluates coding agents on robot tasks.
 
 ## BibTeX
 
