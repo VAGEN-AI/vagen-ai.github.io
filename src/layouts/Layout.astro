@@ -32,6 +32,46 @@ const authors = [
   { name: "Manling Li", url: "https://limanling.github.io/", id: "https://limanling.github.io/#person" },
 ];
 
+const labOrg = {
+  "@type": "ResearchOrganization",
+  "@id": "https://www.mll.lab.northwestern.edu/#organization",
+  "name": "MLL Lab, Northwestern University",
+  "alternateName": "Northwestern University MLL Lab",
+  "url": "https://www.mll.lab.northwestern.edu/",
+  "parentOrganization": {
+    "@type": "CollegeOrUniversity",
+    "name": "Northwestern University",
+    "sameAs": "https://en.wikipedia.org/wiki/Northwestern_University"
+  }
+};
+
+const faq = [
+  {
+    q: "What is VAGEN?",
+    a: "VAGEN (arXiv:2510.16907, NeurIPS 2025) is a multi-turn reinforcement learning framework for VLM agents that reinforces world model reasoning. It frames visual agent tasks as a Partially Observable Markov Decision Process (POMDP) and trains the agent to reason about the current visual state and the next state before acting. With VAGEN-Full, a Qwen2.5-VL-3B agent reaches 0.82 across five agent tasks, up from 0.21 for the untrained model."
+  },
+  {
+    q: "How does VAGEN do world model reasoning?",
+    a: "VAGEN structures the agent's reasoning into StateEstimation (\"what is the current state?\", written in <observation> tokens) and TransitionModeling (\"what is next?\", written in <prediction> tokens); their combination is called WorldModeling. The world model is the VLM's own reasoning text, not a separate network. A WorldModeling Reward, computed by an LLM-as-a-Judge that compares the agent's observation and prediction against ground-truth states, gives dense turn-level supervision, and Bi-Level GAE assigns credit first across turns and then across tokens within a turn."
+  },
+  {
+    q: "How is VAGEN different from RAGEN and RL for text-only LLM agents?",
+    a: "RAGEN trains text-based LLM agents with multi-turn reinforcement learning. VAGEN moves agentic RL from textual states to visual observations, which introduces partial observability, so it adds explicit visual state estimation and transition modeling to the agent's reasoning and rewards them during RL. VAGEN uses PPO with observation tokens masked out of the loss; in the paper, Vanilla PPO without this masking reaches only 0.26 overall."
+  },
+  {
+    q: "What results does VAGEN report?",
+    a: "On five tasks (Sokoban, FrozenLake, Navigation, PrimitiveSkill and SVG Reconstruction), the 3B VAGEN-Full model scores 0.82 overall, compared with 0.76 for VAGEN-Base (WorldModeling reasoning only) and 0.21 for the untrained Qwen2.5-VL-3B. The abstract compares this with GPT-5 (0.75), Gemini 2.5 Pro (0.67) and Claude 4.5 (0.62); Table 2 of the paper lists Claude 4.5 Sonnet at 0.64. Among reasoning strategies, WorldModeling (0.76) beats FreeThink (0.67) and NoThink (0.28)."
+  },
+  {
+    q: "Which visual state representation works best for VLM agents?",
+    a: "It is task-dependent. Natural language works best on Sokoban (0.61) and FrozenLake (0.71), while a structured format is slightly better on PrimitiveSkill manipulation (0.94 vs 0.91 for natural language), where object positions were given in the prompt."
+  },
+  {
+    q: "Where are the VAGEN code and paper?",
+    a: "The code is at https://github.com/mll-lab-nu/VAGEN (MIT License), the paper is at https://arxiv.org/abs/2510.16907, documentation is at https://vagen.readthedocs.io/en/latest, and the project page is https://vagen-ai.github.io/."
+  }
+];
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -40,23 +80,55 @@ const jsonLd = {
       "@id": `${siteUrl}#paper`,
       "headline": paperTitle,
       "name": paperTitle,
+      "alternateName": "VAGEN",
       "url": siteUrl,
+      "mainEntityOfPage": { "@id": `${siteUrl}#webpage` },
       "sameAs": [
         `https://arxiv.org/abs/${arxivId}`,
+        `https://huggingface.co/papers/${arxivId}`,
         "https://github.com/mll-lab-nu/VAGEN"
       ],
+      "identifier": [
+        { "@type": "PropertyValue", "propertyID": "arXiv", "value": arxivId }
+      ],
       "datePublished": "2025-10-19",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
       "author": authors.map((a) => ({
         "@type": "Person",
         ...(a.id ? { "@id": a.id } : {}),
         "name": a.name,
         ...(a.url ? { "url": a.url } : {}),
       })),
-      "abstract": "A key challenge in training Vision-Language Model (VLM) agents, compared to Language Model (LLM) agents, lies in the shift from textual states to complex visual observations, which introduces partial observability and demands robust world modeling. VAGEN architecturally enforces and rewards the agent's world model reasoning via reinforcement learning (RL), decomposing reasoning into State Estimation and Transition Modeling. With a World Modeling Reward and Bi-Level GAE, a 3B-parameter model achieves 0.82 across five agent benchmarks, a 3x improvement over its untrained counterpart (0.21), outperforming GPT-5 (0.75), Gemini 2.5 Pro (0.67) and Claude 4.5 (0.62).",
-      "keywords": "world model, reinforcement learning, RL, VLM agent, vision-language model, multi-turn agent, visual state reasoning, POMDP, world model reasoning, agent training",
+      "sourceOrganization": labOrg,
+      "abstract": "A key challenge in training Vision-Language Model (VLM) agents, compared to Language Model (LLM) agents, lies in the shift from textual states to complex visual observations, which introduces partial observability and demands robust world modeling. VAGEN architecturally enforces and rewards the agent's world model reasoning via reinforcement learning (RL), formulating the problem as a POMDP and decomposing reasoning into State Estimation and Transition Modeling. With a WorldModeling Reward and Bi-Level GAE, a 3B-parameter model achieves 0.82 across five agent tasks, up from 0.21 for its untrained counterpart, surpassing proprietary reasoning models like GPT-5 (0.75), Gemini 2.5 Pro (0.67) and Claude 4.5 (0.62).",
+      "keywords": [
+        "world model reasoning",
+        "agentic reinforcement learning",
+        "multi-turn reinforcement learning",
+        "VLM agents",
+        "vision-language models",
+        "visual state estimation",
+        "transition modeling",
+        "POMDP",
+        "credit assignment",
+        "Bi-Level GAE"
+      ],
+      "about": [
+        { "@type": "DefinedTerm", "name": "World model", "sameAs": "https://en.wikipedia.org/wiki/World_model_(artificial_intelligence)" },
+        { "@type": "DefinedTerm", "name": "Reinforcement learning", "sameAs": "https://en.wikipedia.org/wiki/Reinforcement_learning" },
+        { "@type": "DefinedTerm", "name": "Vision-language model", "sameAs": "https://en.wikipedia.org/wiki/Vision-language_model" },
+        { "@type": "DefinedTerm", "name": "Intelligent agent", "sameAs": "https://en.wikipedia.org/wiki/Intelligent_agent" },
+        { "@type": "DefinedTerm", "name": "Partially observable Markov decision process", "sameAs": "https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process" },
+        { "@type": "DefinedTerm", "name": "Multi-turn agentic reinforcement learning" },
+        { "@type": "DefinedTerm", "name": "Credit assignment" }
+      ],
+      "encoding": [
+        { "@type": "MediaObject", "encodingFormat": "application/pdf", "contentUrl": `https://arxiv.org/pdf/${arxivId}`, "name": "VAGEN paper (arXiv PDF)" },
+        { "@type": "MediaObject", "encodingFormat": "application/pdf", "contentUrl": `${siteUrl}vagen_paper.pdf`, "name": "VAGEN paper (PDF mirror)" }
+      ],
       "citation": [
-        { "@type": "ScholarlyArticle", "name": "Planning with the Views", "url": "https://viewagent.github.io/", "sameAs": "https://arxiv.org/abs/2605.29563" },
-        { "@type": "ScholarlyArticle", "name": "RAGEN: Understanding Self-Evolution in LLM Agents via Multi-Turn Reinforcement Learning" },
+        { "@type": "ScholarlyArticle", "name": "RAGEN: Understanding Self-Evolution in LLM Agents via Multi-Turn Reinforcement Learning", "sameAs": "https://arxiv.org/abs/2504.20073" },
         { "@type": "ScholarlyArticle", "name": "VLM-R1: A Stable and Generalizable R1-style Large Vision-Language Model" },
         { "@type": "ScholarlyArticle", "name": "Qwen2.5-VL Technical Report" },
         { "@type": "ScholarlyArticle", "name": "ManiSkill: Generalizable Manipulation Skill Benchmark" },
@@ -68,12 +140,32 @@ const jsonLd = {
       }
     },
     {
+      "@type": "WebPage",
+      "@id": `${siteUrl}#webpage`,
+      "url": siteUrl,
+      "name": paperTitle,
+      "description": description,
+      "inLanguage": "en",
+      "isPartOf": { "@id": `${siteUrl}#website` },
+      "mainEntity": { "@id": `${siteUrl}#paper` },
+      "about": { "@id": `${siteUrl}#paper` },
+      "primaryImageOfPage": { "@type": "ImageObject", "url": ogImage, "width": 1200, "height": 630 },
+      "relatedLink": [
+        "https://ragen-ai.github.io/",
+        "https://viewagent.github.io/",
+        "https://www.embodied-first-exam.ai/",
+        "https://ai.stanford.edu/blog/vagen/"
+      ]
+    },
+    {
       "@type": "WebSite",
       "@id": `${siteUrl}#website`,
       "url": siteUrl,
       "name": "VAGEN",
       "alternateName": ["VAGEN-AI", "VAGEN: World Model Reasoning for VLM Agents"],
-      "description": description
+      "description": description,
+      "inLanguage": "en",
+      "publisher": labOrg
     },
     {
       "@type": "SoftwareSourceCode",
@@ -82,7 +174,64 @@ const jsonLd = {
       "description": "VAGEN framework: multi-turn reinforcement learning for VLM agents with world model reasoning, WorldModeling Reward, and Bi-Level GAE.",
       "codeRepository": "https://github.com/mll-lab-nu/VAGEN",
       "programmingLanguage": "Python",
+      "license": "https://opensource.org/licenses/MIT",
+      "keywords": [
+        "agentic reinforcement learning",
+        "multi-turn reinforcement learning",
+        "RL for vision",
+        "VLM agents",
+        "world model reasoning",
+        "world models",
+        "vision-language models"
+      ],
+      "author": [
+        { "@id": "https://www.mll.lab.northwestern.edu/#organization" },
+        { "@id": "https://limanling.github.io/#person" }
+      ],
+      "isBasedOn": { "@id": `${siteUrl}#paper` },
+      "citation": { "@id": `${siteUrl}#paper` },
+      "subjectOf": { "@type": "TechArticle", "name": "VAGEN documentation", "url": "https://vagen.readthedocs.io/en/latest" },
       "url": siteUrl
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${siteUrl}#faq`,
+      "about": { "@id": `${siteUrl}#paper` },
+      "inLanguage": "en",
+      "mainEntity": faq.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "@id": "https://ragen-ai.github.io/#ragen2-paper",
+      "name": "RAGEN-2: Reasoning Collapse in Agentic RL",
+      "url": "https://ragen-ai.github.io/",
+      "sameAs": "https://arxiv.org/abs/2604.06268",
+      "contributor": { "@id": "https://limanling.github.io/#person" },
+      "sourceOrganization": { "@id": "https://www.mll.lab.northwestern.edu/#organization" }
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "@id": "https://viewagent.github.io/#paper",
+      "name": "Planning with the Views",
+      "alternateName": "ViewAgent: View Planning with Multi-turn VLM Agents",
+      "url": "https://viewagent.github.io/",
+      "sameAs": "https://arxiv.org/abs/2605.29563",
+      "contributor": { "@id": "https://limanling.github.io/#person" },
+      "sourceOrganization": { "@id": "https://www.mll.lab.northwestern.edu/#organization" }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://www.embodied-first-exam.ai/#exam",
+      "name": "Embodied First Exam",
+      "alternateName": "EFE",
+      "url": "https://www.embodied-first-exam.ai/",
+      "sameAs": "https://github.com/mll-lab-nu/embodied-first-exam",
+      "contributor": { "@id": "https://limanling.github.io/#person" },
+      "sourceOrganization": { "@id": "https://www.mll.lab.northwestern.edu/#organization" }
     }
   ]
 };
@@ -99,7 +248,7 @@ const jsonLd = {
         {/* SEO */}
         <meta name="google-site-verification" content="wK1GsSV4RKa2YGeiyIUuTNSVsXi85wHPuKb0p5StcJ4" />
         <meta name="description" content={description} />
-        <meta name="keywords" content="world model, reinforcement learning, RL, world model RL, VLM agent, VLM agent RL, vision-language model agent, multi-turn RL, visual state reasoning, world model reasoning, POMDP, agent training, VAGEN, NeurIPS 2025" />
+        <meta name="keywords" content="world model, reinforcement learning, RL, world model RL, VLM agent, VLM agent RL, vision-language model agent, multi-turn RL, multi-turn reinforcement learning, agentic reinforcement learning, agent RL, RL for vision, multi-turn VLM agents, visual state reasoning, world model reasoning, POMDP, agent training, VAGEN, NeurIPS 2025" />
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
         <link rel="canonical" href={siteUrl} />
 
